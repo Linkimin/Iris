@@ -1,10 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using Iris.Application.Abstractions.Models.Contracts.Chat;
+using Iris.Shared.Results;
 
-namespace Iris.Application.Abstractions.Models.Interfaces
+namespace Iris.Application.Abstractions.Models.Interfaces;
+
+public interface IChatModelClient
 {
-    internal interface IChatModelClient
-    {
-    }
+    Task<Result<ChatModelResponse>> SendAsync(
+        ChatModelRequest request,
+        CancellationToken cancellationToken);
 }

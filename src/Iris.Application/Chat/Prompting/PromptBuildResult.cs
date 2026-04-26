@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using Iris.Application.Abstractions.Models.Contracts.Chat;
 
-namespace Iris.Application.Chat.BuildPrompt
-{
-    internal class PromptBuildResult
-    {
-    }
-}
+namespace Iris.Application.Chat.Prompting;
+
+public sealed record PromptBuildResult(ChatModelRequest ModelRequest);

@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using Iris.Application.Chat.Contracts;
+using Iris.Domain.Conversations;
 
-namespace Iris.Application.Chat.SendMessage
-{
-    internal class SendMessageResult
-    {
-    }
-}
+namespace Iris.Application.Chat.SendMessage;
+
+public sealed record SendMessageResult(
+    ConversationId ConversationId,
+    ChatMessageDto UserMessage,
+    ChatMessageDto AssistantMessage);

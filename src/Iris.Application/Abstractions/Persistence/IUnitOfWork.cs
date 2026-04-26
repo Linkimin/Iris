@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+namespace Iris.Application.Abstractions.Persistence;
 
-namespace Iris.Application.Abstractions.Persistence
+public interface IUnitOfWork
 {
-    internal interface IUnitOfWork
-    {
-    }
+    Task CommitAsync(CancellationToken cancellationToken);
 }

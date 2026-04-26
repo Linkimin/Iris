@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using Iris.Domain.Conversations;
 
-namespace Iris.Application.Chat.Contracts
-{
-    internal class ChatMessageDto
-    {
-    }
-}
+namespace Iris.Application.Chat.Contracts;
+
+public sealed record ChatMessageDto(
+    MessageId Id,
+    ConversationId ConversationId,
+    MessageRole Role,
+    string Content,
+    DateTimeOffset CreatedAt);

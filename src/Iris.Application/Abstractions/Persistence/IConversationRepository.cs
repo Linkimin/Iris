@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using Iris.Domain.Conversations;
 
-namespace Iris.Application.Abstractions.Persistence
+namespace Iris.Application.Abstractions.Persistence;
+
+public interface IConversationRepository
 {
-    internal interface IConversationRepository
-    {
-    }
+    Task<Conversation?> GetByIdAsync(ConversationId id, CancellationToken cancellationToken);
+
+    Task AddAsync(Conversation conversation, CancellationToken cancellationToken);
 }

@@ -1,10 +1,3 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+namespace Iris.Application.Abstractions.Models.Contracts.Chat;
 
-namespace Iris.Application.Abstractions.Models.Contracts.Chat
-{
-    internal class ChatModelOptions
-    {
-    }
-}
+public sealed record ChatModelOptions(string? Model = null, double? Temperature = null);

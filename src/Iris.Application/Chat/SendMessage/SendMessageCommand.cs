@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using Iris.Domain.Conversations;
 
-namespace Iris.Application.Chat.SendMessage
-{
-    internal class SendMessageCommand
-    {
-    }
-}
+namespace Iris.Application.Chat.SendMessage;
+
+public sealed record SendMessageCommand(
+    ConversationId? ConversationId,
+    string Message);

@@ -1,10 +1,3 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+namespace Iris.Application.Abstractions.Models.Contracts.Chat;
 
-namespace Iris.Application.Abstractions.Models.Contracts.Chat
-{
-    internal class ChatModelMessage
-    {
-    }
-}
+public sealed record ChatModelMessage(ChatModelRole Role, string Content);

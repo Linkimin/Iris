@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+namespace Iris.Application.Abstractions.Models.Contracts.Chat;
 
-namespace Iris.Application.Abstractions.Models.Contracts.Chat
-{
-    internal class ChatModelRequest
-    {
-    }
-}
+public sealed record ChatModelRequest(
+    IReadOnlyList<ChatModelMessage> Messages,
+    ChatModelOptions Options);

@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+namespace Iris.Application.Abstractions.Models.Contracts.Chat;
 
-namespace Iris.Application.Abstractions.Models.Contracts.Chat
+public enum ChatModelRole
 {
-    internal class ChatModelRole
-    {
-    }
+    System = 1,
+    User = 2,
+    Assistant = 3
 }
