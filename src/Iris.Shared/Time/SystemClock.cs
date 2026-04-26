@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using Iris.Shared.Time.Interfaces;
 
-namespace Iris.Shared.Time
+namespace Iris.Shared.Time;
+
+public sealed class SystemClock : IClock
 {
-    internal class SystemClock
-    {
-    }
+    public DateTimeOffset UtcNow => DateTimeOffset.UtcNow;
 }

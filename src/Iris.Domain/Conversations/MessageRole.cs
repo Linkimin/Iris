@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+namespace Iris.Domain.Conversations;
 
-namespace Iris.Domain.Conversations
+public enum MessageRole
 {
-    internal class MessageRole
-    {
-    }
+    User = 1,
+    Assistant = 2,
+    System = 3
 }

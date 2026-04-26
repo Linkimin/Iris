@@ -24,4 +24,9 @@
     <Using Include="Xunit" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Iris.Domain\Iris.Domain.csproj" />
+    <ProjectReference Include="..\..\src\Iris.Shared\Iris.Shared.csproj" />
+  </ItemGroup>
+
 </Project>

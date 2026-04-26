@@ -1,10 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+namespace Iris.Shared.Results;
 
-namespace Iris.Shared.Results
+public sealed record Error(string Code, string Message)
 {
-    internal class Error
-    {
-    }
+    public static Error None { get; } = new(string.Empty, string.Empty);
+
+    public static Error Validation(string code, string message) => new(code, message);
+
+    public static Error Failure(string code, string message) => new(code, message);
+
+    public bool IsNone => string.IsNullOrWhiteSpace(Code);
 }

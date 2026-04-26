@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+namespace Iris.Domain.Conversations;
 
-namespace Iris.Domain.Conversations
+public enum ConversationStatus
 {
-    internal class ConversationStatus
-    {
-    }
+    Active = 1,
+    Archived = 2,
+    Closed = 3
 }

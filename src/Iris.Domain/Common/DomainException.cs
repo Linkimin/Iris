@@ -1,10 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+namespace Iris.Domain.Common;
 
-namespace Iris.Domain.Common
+public sealed class DomainException : Exception
 {
-    internal class DomainException
+    public DomainException(string code, string message)
+        : base(message)
     {
+        Code = code;
     }
+
+    public string Code { get; }
 }

@@ -1,10 +1,3 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+namespace Iris.Domain.Common;
 
-namespace Iris.Domain.Common
-{
-    internal class DomainError
-    {
-    }
-}
+public sealed record DomainError(string Code, string Message);

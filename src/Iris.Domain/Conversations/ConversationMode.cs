@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+namespace Iris.Domain.Conversations;
 
-namespace Iris.Domain.Conversations
+public enum ConversationMode
 {
-    internal class ConversationMode
-    {
-    }
+    Default = 1
 }
