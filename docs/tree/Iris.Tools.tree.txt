@@ -1,0 +1,86 @@
+Структура папок тома SSD
+Серийный номер тома: D842-32EC
+E:\WORK\IRIS\SRC\IRIS.TOOLS
+|   DependencyInjection.cs
+|   Iris.Tools.csproj
+|   
++---BuiltInTools
+|   +---Files
+|   |       FileToolInputModels.cs
+|   |       ListDirectoryTool.cs
+|   |       ReadFileTool.cs
+|   |       SearchFilesTool.cs
+|   |       WriteFileTool.cs
+|   |       
+|   +---Shell
+|   |       ShellCommandInputModels.cs
+|   |       ShellCommandResultMapper.cs
+|   |       ShellCommandTool.cs
+|   |       
+|   +---System
+|   |       OpenApplicationTool.cs
+|   |       OpenUrlTool.cs
+|   |       SystemInfoTool.cs
+|   |       SystemToolInputModels.cs
+|   |       
+|   \---Web
+|           HttpFetchTool.cs
+|           WebSearchTool.cs
+|           WebToolInputModels.cs
+|           
++---Diagnostics
+|       ToolDiagnosticsLogger.cs
+|       ToolError.cs
+|       ToolErrorCode.cs
+|       ToolTrace.cs
+|       ToolTraceEventKind.cs
+|       
++---Execution
+|       ToolExecutionContext.cs
+|       ToolExecutionTimeoutPolicy.cs
+|       ToolExecutor.cs
+|       
++---FileSystem
+|       FileReadLimiter.cs
+|       FileSystemErrorMapper.cs
+|       FileWriteGuard.cs
+|       LocalFileSystem.cs
+|       SafeFileWriter.cs
+|       
++---Mapping
+|       ToolDescriptorMapper.cs
+|       ToolErrorMapper.cs
+|       ToolRequestMapper.cs
+|       ToolResultMapper.cs
+|       
++---Options
+|       BuiltInToolsOptions.cs
+|       FileToolOptions.cs
+|       ShellToolOptions.cs
+|       SystemToolOptions.cs
+|       ToolsOptions.cs
+|       WebToolOptions.cs
+|       
++---Processes
+|       ProcessOutputLimiter.cs
+|       ProcessRunner.cs
+|       ProcessRunRequest.cs
+|       ProcessRunResult.cs
+|       
++---Registry
+|       BuiltInToolRegistry.cs
+|       ToolDescriptorFactory.cs
+|       ToolMetadataProvider.cs
+|       
+\---Sandboxing
+        AllowedPathPolicy.cs
+        CommandAllowlist.cs
+        CommandDenylist.cs
+        CommandLineParser.cs
+        CommandParseResult.cs
+        CommandSandbox.cs
+        PathSandbox.cs
+        PathSandboxOptions.cs
+        ProcessExecutionGuard.cs
+        SandboxViolation.cs
+        

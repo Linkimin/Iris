@@ -1,0 +1,341 @@
+Структура папок тома SSD
+Серийный номер тома: D842-32EC
+E:\WORK\IRIS\SRC\IRIS.APPLICATION
+|   DependencyInjection.cs
+|   Iris.Application.csproj
+|   
++---Abstractions
+|   +---Events
+|   |       IApplicationEventBus.cs
+|   |       
+|   +---Models
+|   |   +---Contracts
+|   |   |   +---Chat
+|   |   |   |       ChatModelMessage.cs
+|   |   |   |       ChatModelOptions.cs
+|   |   |   |       ChatModelRequest.cs
+|   |   |   |       ChatModelResponse.cs
+|   |   |   |       ChatModelRole.cs
+|   |   |   |       ChatModelUsage.cs
+|   |   |   |       
+|   |   |   +---Embeddings
+|   |   |   |       EmbeddingRequest.cs
+|   |   |   |       EmbeddingResponse.cs
+|   |   |   |       
+|   |   |   +---Routing
+|   |   |   |       ModelProviderKind.cs
+|   |   |   |       ModelRouteRequest.cs
+|   |   |   |       ModelRouteResult.cs
+|   |   |   |       ModelTaskType.cs
+|   |   |   |       
+|   |   |   \---Vision
+|   |   |           VisionInputKind.cs
+|   |   |           VisionModelRequest.cs
+|   |   |           VisionModelResponse.cs
+|   |   |           
+|   |   \---Interfaces
+|   |           IChatModelClient.cs
+|   |           IEmbeddingClient.cs
+|   |           IModelRouter.cs
+|   |           IVisionModelClient.cs
+|   |           
+|   +---Perception
+|   |       IActiveWindowProvider.cs
+|   |       IClipboardProvider.cs
+|   |       IDesktopContextProvider.cs
+|   |       IScreenshotProvider.cs
+|   |       
+|   +---Persistence
+|   |       IConversationRepository.cs
+|   |       IEventRepository.cs
+|   |       IMemoryRepository.cs
+|   |       IMessageRepository.cs
+|   |       IPersonaStateRepository.cs
+|   |       IToolPermissionRepository.cs
+|   |       IUnitOfWork.cs
+|   |       
+|   +---Serialization
+|   |       IJsonSerializer.cs
+|   |       
+|   +---Tools
+|   |       IPermissionService.cs
+|   |       IToolExecutor.cs
+|   |       IToolRegistry.cs
+|   |       
+|   \---Voice
+|           IAudioPlaybackService.cs
+|           ISpeechToTextClient.cs
+|           ITextToSpeechClient.cs
+|           
++---BackgroundTasks
+|   |   BackgroundTaskResult.cs
+|   |   IBackgroundTask.cs
+|   |   
+|   +---Conversation
+|   |       ConversationSummarizationTask.cs
+|   |       
+|   +---Memory
+|   |       MemoryConsolidationTask.cs
+|   |       MemoryEmbeddingTask.cs
+|   |       
+|   \---Persona
+|           PersonaMaintenanceTask.cs
+|           
++---bin
+|   \---Debug
+|       \---net10.0
++---Chat
+|   +---Contracts
+|   |       ChatAttachmentDto.cs
+|   |       ChatMessageDto.cs
+|   |       ChatResponseDto.cs
+|   |       ChatRoleDto.cs
+|   |       
+|   +---History
+|   |       ConversationHistoryCompressor.cs
+|   |       ConversationHistoryLoader.cs
+|   |       ConversationWindowPolicy.cs
+|   |       
+|   +---Pipeline
+|   |   |   AssistantActionPlanner.cs
+|   |   |   ChatPipelineContext.cs
+|   |   |   ChatResponsePipeline.cs
+|   |   |   ResponsePostProcessor.cs
+|   |   |   
+|   |   \---Interfaces
+|   |           IChatPipelineStep.cs
+|   |           
+|   +---Prompting
+|   |       PromptBudgetPolicy.cs
+|   |       PromptBuilder.cs
+|   |       PromptBuildRequest.cs
+|   |       PromptBuildResult.cs
+|   |       PromptRenderingPolicy.cs
+|   |       PromptRenderOptions.cs
+|   |       PromptSection.cs
+|   |       PromptSectionKind.cs
+|   |       PromptTemplateProvider.cs
+|   |       
+|   \---SendMessage
+|           SendMessageCommand.cs
+|           SendMessageHandler.cs
+|           SendMessageResult.cs
+|           SendMessageValidator.cs
+|           
++---Context
+|   |   ContextItem.cs
+|   |   ContextItemKind.cs
+|   |   ContextPriority.cs
+|   |   
+|   +---Budgeting
+|   |       ContextBudgetPolicy.cs
+|   |       
+|   +---Interaction
+|   |       InteractionContextBuilder.cs
+|   |       InteractionContextRequest.cs
+|   |       InteractionContextResult.cs
+|   |       
+|   \---Retrieval
+|           RetrievedContext.cs
+|           RetrievedContextBuilder.cs
+|           RetrievedContextItem.cs
+|           
++---Diagnostics
+|       ApplicationTrace.cs
+|       ApplicationTraceStep.cs
+|       DecisionLog.cs
+|       DecisionLogEntry.cs
+|       DecisionReasonCode.cs
+|       TraceContext.cs
+|       TraceSeverity.cs
+|       TraceStepKind.cs
+|       
++---Events
+|       ApplicationEvent.cs
+|       ApplicationEventKind.cs
+|       EventEnvelope.cs
+|       EventMetadata.cs
+|       
++---Memory
+|   +---Audit
+|   |       MemoryAccessLogger.cs
+|   |       MemoryAuditRecord.cs
+|   |       MemorySourceExplainer.cs
+|   |       
+|   +---Consolidation
+|   |       MemoryConflictDetector.cs
+|   |       MemoryConflictKind.cs
+|   |       MemoryConsolidationPlan.cs
+|   |       MemoryConsolidationRequest.cs
+|   |       MemoryConsolidationResult.cs
+|   |       MemoryConsolidationService.cs
+|   |       MemoryMergeDecision.cs
+|   |       
+|   +---Contracts
+|   |       MemoryCandidate.cs
+|   |       MemoryCandidateKind.cs
+|   |       MemoryOperationContext.cs
+|   |       MemoryOperationKind.cs
+|   |       MemoryRankedItem.cs
+|   |       MemoryReference.cs
+|   |       MemorySearchQuery.cs
+|   |       MemorySourceReference.cs
+|   |       
+|   +---Embeddings
+|   |       MemoryEmbeddingRequest.cs
+|   |       MemoryEmbeddingResult.cs
+|   |       MemoryEmbeddingService.cs
+|   |       MemoryEmbeddingTextBuilder.cs
+|   |       
+|   +---Extract
+|   |       MemoryCandidateFilter.cs
+|   |       MemoryExtractionRequest.cs
+|   |       MemoryExtractionResult.cs
+|   |       MemoryExtractionService.cs
+|   |       
+|   +---Forget
+|   |       ForgetMemoryCommand.cs
+|   |       ForgetMemoryHandler.cs
+|   |       ForgetMemoryResult.cs
+|   |       
+|   +---Policies
+|   |       MemoryMergePolicy.cs
+|   |       MemoryPromotionPolicy.cs
+|   |       MemoryRetentionPolicy.cs
+|   |       MemoryScoringPolicy.cs
+|   |       MemorySensitivityPolicy.cs
+|   |       
+|   +---Ranking
+|   |       MemoryRankingRequest.cs
+|   |       MemoryRankingResult.cs
+|   |       MemoryRankingService.cs
+|   |       
+|   +---Recall
+|   |       MemorySearchResult.cs
+|   |       RecallHandler.cs
+|   |       RecallQuery.cs
+|   |       RecallResult.cs
+|   |       
+|   \---Remember
+|           RememberCommand.cs
+|           RememberHandler.cs
+|           RememberResult.cs
+|           RememberValidator.cs
+|           
++---obj
+|   \---Debug
+|       \---net10.0
+|           |   .NETCoreApp,Version=v10.0.AssemblyAttributes.cs
+|           |   Iris.Application.AssemblyInfo.cs
+|           |   Iris.Application.AssemblyInfoInputs.cache
+|           |   Iris.Application.GeneratedMSBuildEditorConfig.editorconfig
+|           |   Iris.Application.GlobalUsings.g.cs
+|           |   
+|           +---ref
+|           \---refint
++---Perception
+|   +---CaptureDesktopContext
+|   |       CaptureDesktopContextHandler.cs
+|   |       CaptureDesktopContextQuery.cs
+|   |       CaptureDesktopContextResult.cs
+|   |       
+|   +---Policies
+|   |       ClipboardAccessPolicy.cs
+|   |       DesktopContextPolicy.cs
+|   |       ScreenshotPermissionPolicy.cs
+|   |       
+|   \---SummarizeScreen
+|           SummarizeScreenCommand.cs
+|           SummarizeScreenHandler.cs
+|           SummarizeScreenResult.cs
+|           
++---Persona
+|   +---Context
+|   |       PersonaContextBuilder.cs
+|   |       
+|   +---Mood
+|   |       MoodSelectionService.cs
+|   |       MoodTransitionPolicy.cs
+|   |       
+|   +---Policies
+|   |       PersonaPolicy.cs
+|   |       
+|   +---Relationship
+|   |       RelationshipPolicy.cs
+|   |       
+|   +---State
+|   |       PersonaStateService.cs
+|   |       PersonaStateUpdateRequest.cs
+|   |       PersonaStateUpdateResult.cs
+|   |       
+|   \---Style
+|           SpeechStylePolicy.cs
+|           
++---Policies
+|       ApplicationPolicy.cs
+|       ContentRetentionPolicy.cs
+|       LocalOnlyPolicy.cs
+|       SafetyPolicy.cs
+|       UserAutonomyPolicy.cs
+|       
++---Sessions
+|   |   SessionRuntimeState.cs
+|   |   
+|   +---Context
+|   |       SessionContextService.cs
+|   |       
+|   +---EndSession
+|   |       EndSessionCommand.cs
+|   |       EndSessionHandler.cs
+|   |       EndSessionResult.cs
+|   |       
+|   +---Policies
+|   |       SessionPolicy.cs
+|   |       
+|   \---StartSession
+|           StartSessionCommand.cs
+|           StartSessionHandler.cs
+|           StartSessionResult.cs
+|           
++---ToolUse
+|   +---Contracts
+|   |       ToolDescriptorDto.cs
+|   |       ToolExecutionStatusDto.cs
+|   |       ToolRequestDto.cs
+|   |       ToolResultDto.cs
+|   |       
+|   +---Execution
+|   |       ExecuteToolCommand.cs
+|   |       ExecuteToolHandler.cs
+|   |       ExecuteToolResult.cs
+|   |       
+|   +---Permissions
+|   |       PermissionDecision.cs
+|   |       PermissionDecisionService.cs
+|   |       PermissionPolicy.cs
+|   |       PermissionPrompt.cs
+|   |       PermissionRequest.cs
+|   |       PermissionResult.cs
+|   |       
+|   \---Planning
+|           ToolCallIntent.cs
+|           ToolCallPlan.cs
+|           ToolCallPlanner.cs
+|           ToolCallPlanResult.cs
+|           ToolCallRiskClassifier.cs
+|           ToolCallValidationResult.cs
+|           
+\---Voice
+    +---Policies
+    |       VoicePolicy.cs
+    |       
+    +---SpeakText
+    |       SpeakTextCommand.cs
+    |       SpeakTextHandler.cs
+    |       SpeakTextResult.cs
+    |       
+    \---TranscribeSpeech
+            TranscribeSpeechCommand.cs
+            TranscribeSpeechHandler.cs
+            TranscribeSpeechResult.cs
+            

@@ -1,0 +1,124 @@
+Структура папок тома SSD
+Серийный номер тома: D842-32EC
+E:\WORK\IRIS\SRC\IRIS.DOMAIN
+|   Iris.Domain.csproj
+|   
++---bin
+|   \---Debug
+|       \---net10.0
++---Common
+|       AggregateRoot.cs
+|       DomainError.cs
+|       DomainEvent.cs
+|       DomainException.cs
+|       Entity.cs
+|       ValueObject.cs
+|       
++---Context
+|       ActiveWindowContext.cs
+|       ClipboardContext.cs
+|       ContextConfidence.cs
+|       ContextFreshness.cs
+|       ContextKind.cs
+|       ContextSource.cs
+|       DesktopContext.cs
+|       InteractionContext.cs
+|       ScreenContext.cs
+|       
++---Conversations
+|       Conversation.cs
+|       ConversationId.cs
+|       ConversationMode.cs
+|       ConversationStatus.cs
+|       ConversationTitle.cs
+|       Message.cs
+|       MessageContent.cs
+|       MessageId.cs
+|       MessageMetadata.cs
+|       MessageRole.cs
+|       
++---Emotions
+|   |   EmotionalTone.cs
+|   |   EmotionIntensity.cs
+|   |   EmotionSignal.cs
+|   |   MoodReason.cs
+|   |   MoodState.cs
+|   |   MoodTransition.cs
+|   |   
+|   \---Policies
+|           EmotionalDecayPolicy.cs
+|           
++---Events
+|       AssistantEvent.cs
+|       DesktopEvent.cs
+|       IrisEvent.cs
+|       IrisEventId.cs
+|       IrisEventKind.cs
+|       MemoryEvent.cs
+|       ToolEvent.cs
+|       UserEvent.cs
+|       
++---Memories
+|       Memory.cs
+|       MemoryConfidence.cs
+|       MemoryContent.cs
+|       MemoryId.cs
+|       MemoryImportance.cs
+|       MemoryLifecycle.cs
+|       MemorySensitivity.cs
+|       MemorySource.cs
+|       MemorySourceType.cs
+|       MemoryStatus.cs
+|       MemoryType.cs
+|       MemoryUsageStats.cs
+|       
++---obj
+|   \---Debug
+|       \---net10.0
+|           |   .NETCoreApp,Version=v10.0.AssemblyAttributes.cs
+|           |   Iris.Domain.AssemblyInfo.cs
+|           |   Iris.Domain.AssemblyInfoInputs.cache
+|           |   Iris.Domain.GeneratedMSBuildEditorConfig.editorconfig
+|           |   Iris.Domain.GlobalUsings.g.cs
+|           |   
+|           +---ref
+|           \---refint
++---Permissions
+|       PermissionDecision.cs
+|       PermissionLevel.cs
+|       PermissionReason.cs
+|       PermissionRisk.cs
+|       PermissionScope.cs
+|       
++---Persona
+|       InitiativeLevel.cs
+|       PersonaBoundary.cs
+|       PersonaBoundaryKind.cs
+|       PersonaMode.cs
+|       PersonaProfile.cs
+|       PersonaState.cs
+|       PersonaTrait.cs
+|       PersonaTraitKind.cs
+|       RelationshipLevel.cs
+|       RelationshipState.cs
+|       SpeechStyle.cs
+|       
++---Safety
+|       LocalityMode.cs
+|       SafetyBoundary.cs
+|       SafetyBoundaryKind.cs
+|       SensitiveDataKind.cs
+|       
++---Sessions
+|       SessionId.cs
+|       SessionMetadata.cs
+|       SessionMode.cs
+|       SessionStatus.cs
+|       
+\---Tools
+        ToolCapability.cs
+        ToolCategory.cs
+        ToolExecutionStatus.cs
+        ToolId.cs
+        ToolName.cs
+        

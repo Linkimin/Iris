@@ -1,0 +1,86 @@
+Структура папок тома SSD
+Серийный номер тома: D842-32EC
+E:\WORK\IRIS\SRC\IRIS.DESKTOP
+|   App.axaml
+|   App.axaml.cs
+|   app.manifest
+|   DependencyInjection.cs
+|   Iris.Desktop.csproj
+|   Program.cs
+|   
++---Assets
+|   |   avalonia-logo.ico
+|   |   
+|   +---Avatars
+|   +---Icons
+|   \---Sounds
++---bin
+|   \---Debug
+|       \---net10.0
++---Controls
+|   +---Avatar
+|   |       AvatarPanel.axaml
+|   |       AvatarPanel.axaml.cs
+|   |       
+|   +---Chat
+|   |       ChatMessageBubble.axaml
+|   |       ChatMessageBubble.axaml.cs
+|   |       
+|   \---Memory
+|           MemoryCard.axaml
+|           MemoryCard.axaml.cs
+|           
++---DesignTime
+|       DesignTimeViewModelLocator.cs
+|       
++---Models
+|       ChatMessageViewModelItem.cs
+|       MemoryViewModelItem.cs
+|       PermissionPromptViewModelItem.cs
+|       
++---obj
+|   \---Debug
+|       \---net10.0
+|           |   .NETCoreApp,Version=v10.0.AssemblyAttributes.cs
+|           |   Iris.Desktop.AssemblyInfo.cs
+|           |   Iris.Desktop.AssemblyInfoInputs.cache
+|           |   Iris.Desktop.GeneratedMSBuildEditorConfig.editorconfig
+|           |   
+|           +---ref
+|           \---refint
++---Services
+|       ApplicationHostService.cs
+|       DesktopDialogService.cs
+|       IrisApplicationFacade.cs
+|       NavigationService.cs
+|       NotificationService.cs
+|       UiDispatcher.cs
+|       
++---Themes
+|       DarkTheme.axaml
+|       IrisTheme.axaml
+|       LightTheme.axaml
+|       
++---ViewModels
+|       AvatarViewModel.cs
+|       ChatViewModel.cs
+|       MainWindowViewModel.cs
+|       MemoryViewModel.cs
+|       PermissionsViewModel.cs
+|       SettingsViewModel.cs
+|       ShellViewModel.cs
+|       
+\---Views
+        ChatView.axaml
+        ChatView.axaml.cs
+        MainWindow.axaml
+        MainWindow.axaml.cs
+        MemoryView.axaml
+        MemoryView.axaml.cs
+        PermissionsView.axaml
+        PermissionsView.axaml.cs
+        SettingsView.axaml
+        SettingsView.axaml.cs
+        ShellView.axaml
+        ShellView.axaml.cs
+        

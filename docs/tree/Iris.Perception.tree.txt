@@ -1,0 +1,34 @@
+Структура папок тома SSD
+Серийный номер тома: D842-32EC
+E:\WORK\IRIS\SRC\IRIS.PERCEPTION
+|   DependencyInjection.cs
+|   Iris.Perception.csproj
+|   
++---Desktop
+|       ActiveWindowProvider.cs
+|       ClipboardProvider.cs
+|       DesktopContextProvider.cs
+|       ScreenshotProvider.cs
+|       
++---Diagnostics
+|       PerceptionError.cs
+|       PerceptionErrorMapper.cs
+|       PerceptionTrace.cs
+|       
++---Mapping
+|       ActiveWindowContextMapper.cs
+|       ClipboardContextMapper.cs
+|       DesktopContextMapper.cs
+|       ScreenContextMapper.cs
+|       
++---Options
+|       PerceptionOptions.cs
+|       
+\---Windows
+        Win32ActiveWindowReader.cs
+        Win32ClipboardReader.cs
+        Win32NativeMethods.cs
+        Win32ProcessReader.cs
+        Win32ScreenshotCapture.cs
+        Win32WindowHandle.cs
+        

@@ -1,0 +1,69 @@
+Структура папок тома SSD
+Серийный номер тома: D842-32EC
+E:\WORK\IRIS\SRC\IRIS.SHARED
+|   Iris.Shared.csproj
+|   
++---bin
+|   \---Debug
+|       \---net10.0
++---Collections
+|   |   CollectionExtensions.cs
+|   |   ReadOnlyPage.cs
+|   |   
+|   \---Interfaces
+|           IReadOnlyPage.cs
+|           
++---Diagnostics
+|       CorrelationId.cs
+|       OperationId.cs
+|       TraceContext.cs
+|       
++---Guards
+|       CollectionGuards.cs
+|       Guard.cs
+|       NumericGuards.cs
+|       StringGuards.cs
+|       
++---Identity
+|   |   SystemGuidProvider.cs
+|   |   
+|   \---Interfaces
+|           IGuidProvider.cs
+|           
++---obj
+|   \---Debug
+|       \---net10.0
+|           |   .NETCoreApp,Version=v10.0.AssemblyAttributes.cs
+|           |   Iris.Shared.AssemblyInfo.cs
+|           |   Iris.Shared.AssemblyInfoInputs.cache
+|           |   Iris.Shared.GeneratedMSBuildEditorConfig.editorconfig
+|           |   Iris.Shared.GlobalUsings.g.cs
+|           |   
+|           +---ref
+|           \---refint
++---Pagination
+|       PageRequest.cs
+|       PageResult.cs
+|       SortDirection.cs
+|       SortRequest.cs
+|       
++---Primitives
+|       NonEmptyString.cs
+|       Percentage.cs
+|       StronglyTypedGuid.cs
+|       StronglyTypedId.cs
+|       
++---Results
+|       Error.cs
+|       ErrorType.cs
+|       Result.cs
+|       ResultOfT.cs
+|       ValidationError.cs
+|       
+\---Time
+    |   DateTimeRange.cs
+    |   SystemClock.cs
+    |   
+    \---Interfaces
+            IClock.cs
+            

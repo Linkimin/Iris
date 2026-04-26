@@ -1,0 +1,84 @@
+Структура папок тома SSD
+Серийный номер тома: D842-32EC
+E:\WORK\IRIS\SRC\IRIS.API
+|   appsettings.Development.json
+|   appsettings.json
+|   Iris.Api.csproj
+|   Iris.Api.csproj.user
+|   Iris.Api.http
+|   Program.cs
+|   
++---Contracts
+|   +---Chat
+|   |       SendMessageHttpRequest.cs
+|   |       SendMessageHttpResponse.cs
+|   |       
+|   +---Common
+|   |       ApiErrorResponse.cs
+|   |       ApiResponse.cs
+|   |       ApiValidationError.cs
+|   |       
+|   +---Memory
+|   |       MemoryHttpResponse.cs
+|   |       RecallMemoryHttpRequest.cs
+|   |       RememberHttpRequest.cs
+|   |       
+|   +---Sessions
+|   |       SessionHttpResponse.cs
+|   |       StartSessionHttpRequest.cs
+|   |       
+|   \---Tools
+|           ExecuteToolHttpRequest.cs
+|           ToolHttpResponse.cs
+|           
++---DependencyInjection
+|       ApiAdapterRegistration.cs
+|       ApiEndpointRegistration.cs
+|       ApiServiceCollectionExtensions.cs
+|       
++---Diagnostics
+|       ApiDiagnosticsLogger.cs
+|       ApiError.cs
+|       ApiErrorCode.cs
+|       ApiTrace.cs
+|       
++---Endpoints
+|       ChatEndpoints.cs
+|       HealthEndpoints.cs
+|       MemoryEndpoints.cs
+|       PersonaEndpoints.cs
+|       SessionEndpoints.cs
+|       ToolEndpoints.cs
+|       VoiceEndpoints.cs
+|       
++---Health
+|       ApiHealthCheck.cs
+|       ApiReadinessState.cs
+|       
++---Mapping
+|       ApiErrorMapper.cs
+|       ChatApiMapper.cs
+|       MemoryApiMapper.cs
+|       PersonaApiMapper.cs
+|       SessionApiMapper.cs
+|       ToolApiMapper.cs
+|       VoiceApiMapper.cs
+|       
++---Middleware
+|       ExceptionHandlingMiddleware.cs
+|       LocalOnlyMiddleware.cs
+|       RequestCorrelationMiddleware.cs
+|       RequestLoggingMiddleware.cs
+|       
++---OpenApi
+|       OpenApiConfiguration.cs
+|       OpenApiExamples.cs
+|       
++---Properties
+|       launchSettings.json
+|       
+\---Security
+        ApiKeyAuthenticationHandler.cs
+        ApiSecurityOptions.cs
+        LocalOnlyPolicy.cs
+        

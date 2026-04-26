@@ -1,0 +1,41 @@
+Структура папок тома SSD
+Серийный номер тома: D842-32EC
+E:\WORK\IRIS\SRC\IRIS.WORKER
+|   appsettings.Development.json
+|   appsettings.json
+|   Iris.Worker.csproj
+|   Program.cs
+|   
++---Configuration
+|       WorkerConfiguration.cs
+|       WorkerConfigurationValidator.cs
+|       
++---DependencyInjection
+|       WorkerAdapterRegistration.cs
+|       WorkerHostedServiceRegistration.cs
+|       WorkerServiceCollectionExtensions.cs
+|       
++---Diagnostics
+|       WorkerDiagnosticsLogger.cs
+|       WorkerError.cs
+|       WorkerErrorCode.cs
+|       WorkerTrace.cs
+|       
++---Health
+|       WorkerHealthCheck.cs
+|       WorkerReadinessState.cs
+|       
++---Hosting
+|       WorkerHostBuilder.cs
+|       WorkerHostOptions.cs
+|       WorkerLifetimeEvents.cs
+|       
++---Properties
+|       launchSettings.json
+|       
+\---Services
+        BackgroundTaskHostedService.cs
+        IrisWorkerService.cs
+        ScheduledTaskHostedService.cs
+        StartupInitializationService.cs
+        

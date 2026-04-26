@@ -1,0 +1,58 @@
+Структура папок тома SSD
+Серийный номер тома: D842-32EC
+E:\WORK\IRIS\SRC\IRIS.MODELGATEWAY
+|   DependencyInjection.cs
+|   Iris.ModelGateway.csproj
+|   
++---bin
+|   \---Debug
+|       \---net10.0
++---Diagnostics
+|       ModelGatewayError.cs
+|       ModelGatewayErrorMapper.cs
+|       ModelGatewayTrace.cs
+|       
++---Http
+|       ModelGatewayHttpClientNames.cs
+|       ModelGatewayHttpErrorHandler.cs
+|       ModelGatewayHttpOptions.cs
+|       
++---LmStudio
+|       LmStudioChatModelClient.cs
+|       LmStudioEmbeddingClient.cs
+|       LmStudioModelClientOptions.cs
+|       LmStudioRequestMapper.cs
+|       LmStudioResponseMapper.cs
+|       
++---obj
+|   \---Debug
+|       \---net10.0
+|           |   .NETCoreApp,Version=v10.0.AssemblyAttributes.cs
+|           |   Iris.ModelGateway.AssemblyInfo.cs
+|           |   Iris.ModelGateway.AssemblyInfoInputs.cache
+|           |   Iris.ModelGateway.GeneratedMSBuildEditorConfig.editorconfig
+|           |   Iris.ModelGateway.GlobalUsings.g.cs
+|           |   
+|           +---ref
+|           \---refint
++---Ollama
+|       OllamaApiModels.cs
+|       OllamaChatModelClient.cs
+|       OllamaEmbeddingClient.cs
+|       OllamaModelClientOptions.cs
+|       OllamaRequestMapper.cs
+|       OllamaResponseMapper.cs
+|       
++---OpenAiCompatible
+|       OpenAiCompatibleChatModelClient.cs
+|       OpenAiCompatibleEmbeddingClient.cs
+|       OpenAiCompatibleOptions.cs
+|       OpenAiCompatibleRequestMapper.cs
+|       OpenAiCompatibleResponseMapper.cs
+|       
+\---Routing
+        ModelEndpointDescriptor.cs
+        ModelProviderSelector.cs
+        ModelRouter.cs
+        ModelRoutingOptions.cs
+        

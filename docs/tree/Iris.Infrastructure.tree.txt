@@ -1,0 +1,46 @@
+Структура папок тома SSD
+Серийный номер тома: D842-32EC
+E:\WORK\IRIS\SRC\IRIS.INFRASTRUCTURE
+|   DependencyInjection.cs
+|   Iris.Infrastructure.csproj
+|   
++---AppEnvironment
+|       AppDirectoryOptions.cs
+|       AppDirectoryProvider.cs
+|       AppEnvironment.cs
+|       AppEnvironmentKind.cs
+|       AppPathProvider.cs
+|       
++---BackgroundTasks
+|       BackgroundTaskExecutionContext.cs
+|       BackgroundTaskExecutionResult.cs
+|       BackgroundTaskOptions.cs
+|       BackgroundTaskQueue.cs
+|       BackgroundTaskRunner.cs
+|       BackgroundTaskScheduler.cs
+|       
++---Configuration
+|       ConfigurationBinder.cs
+|       ConfigurationValidationResult.cs
+|       OptionsValidationExtensions.cs
+|       
++---DependencyInjection
+|       InfrastructureOptionsRegistration.cs
+|       InfrastructureServiceCollectionExtensions.cs
+|       
++---Diagnostics
+|       InfrastructureDiagnosticsLogger.cs
+|       InfrastructureError.cs
+|       InfrastructureErrorCode.cs
+|       InfrastructureTrace.cs
+|       
++---Events
+|       ApplicationEventDispatcher.cs
+|       EventHandlerRegistry.cs
+|       InMemoryApplicationEventBus.cs
+|       
+\---Serialization
+        JsonSerializationErrorMapper.cs
+        JsonSerializerOptionsFactory.cs
+        SystemTextJsonSerializer.cs
+        

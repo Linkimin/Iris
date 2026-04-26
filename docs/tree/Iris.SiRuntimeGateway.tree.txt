@@ -1,0 +1,6 @@
+Структура папок тома SSD
+Серийный номер тома: D842-32EC
+E:\WORK\IRIS\PYTHON\IRIS-AI-RUNTIME\SRC\IRIS.SIRUNTIMEGATEWAY
+Путь задан неправильно: \WORK\IRIS\PYTHON\IRIS-AI-RUNTIME\SRC\IRIS.SIRUNTIMEGATEWAY
+Подпапки отсутствуют 
+

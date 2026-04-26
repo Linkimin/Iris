@@ -1,0 +1,64 @@
+Структура папок тома SSD
+Серийный номер тома: D842-32EC
+E:\WORK\IRIS\SRC\IRIS.PERSISTENCE
+|   DependencyInjection.cs
+|   Iris.Persistence.csproj
+|   
++---bin
+|   \---Debug
+|       \---net10.0
++---Configurations
+|       ConversationEntityConfiguration.cs
+|       EventEntityConfiguration.cs
+|       MemoryEmbeddingEntityConfiguration.cs
+|       MemoryEntityConfiguration.cs
+|       MessageEntityConfiguration.cs
+|       PersonaStateEntityConfiguration.cs
+|       ToolPermissionEntityConfiguration.cs
+|       
++---Database
+|       DatabaseOptions.cs
+|       IrisDbContext.cs
+|       IrisDbContextFactory.cs
+|       
++---Entities
+|       ConversationEntity.cs
+|       EventEntity.cs
+|       MemoryEmbeddingEntity.cs
+|       MemoryEntity.cs
+|       MessageEntity.cs
+|       PersonaStateEntity.cs
+|       ToolPermissionEntity.cs
+|       
++---Mapping
+|       ConversationMapper.cs
+|       EventMapper.cs
+|       MemoryEmbeddingMapper.cs
+|       MemoryMapper.cs
+|       MessageMapper.cs
+|       PersonaStateMapper.cs
+|       ToolPermissionMapper.cs
+|       
++---Migrations
++---obj
+|   \---Debug
+|       \---net10.0
+|           |   .NETCoreApp,Version=v10.0.AssemblyAttributes.cs
+|           |   Iris.Persistence.AssemblyInfo.cs
+|           |   Iris.Persistence.AssemblyInfoInputs.cache
+|           |   Iris.Persistence.GeneratedMSBuildEditorConfig.editorconfig
+|           |   Iris.Persistence.GlobalUsings.g.cs
+|           |   
+|           +---ref
+|           \---refint
++---Repositories
+|       ConversationRepository.cs
+|       EventRepository.cs
+|       MemoryRepository.cs
+|       MessageRepository.cs
+|       PersonaStateRepository.cs
+|       ToolPermissionRepository.cs
+|       
+\---UnitOfWork
+        EfUnitOfWork.cs
+        

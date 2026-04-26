@@ -1,0 +1,99 @@
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>96b64bd1-62b6-462f-93eb-8f2312b5ed31</ProjectGuid>
+    <ProjectHome>.</ProjectHome>
+    <StartupFile>src\iris_si_runtime\main.py</StartupFile>
+    <SearchPath>
+    </SearchPath>
+    <WorkingDirectory>.</WorkingDirectory>
+    <OutputPath>.</OutputPath>
+    <Name>iris-ai-runtime</Name>
+    <RootNamespace>iris-ai-runtime</RootNamespace>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DebugSymbols>true</DebugSymbols>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DebugSymbols>true</DebugSymbols>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="scripts\run_runtime.py" />
+    <Compile Include="scripts\smoke_test.py" />
+    <Compile Include="src\iris_si_runtime\adapters\embedding_client.py" />
+    <Compile Include="src\iris_si_runtime\adapters\model_client.py" />
+    <Compile Include="src\iris_si_runtime\adapters\storage_adapter.py" />
+    <Compile Include="src\iris_si_runtime\adapters\__init__.py" />
+    <Compile Include="src\iris_si_runtime\api\app.py" />
+    <Compile Include="src\iris_si_runtime\api\health.py" />
+    <Compile Include="src\iris_si_runtime\api\middleware.py" />
+    <Compile Include="src\iris_si_runtime\api\routes.py" />
+    <Compile Include="src\iris_si_runtime\api\__init__.py" />
+    <Compile Include="src\iris_si_runtime\cognition\hypothesis.py" />
+    <Compile Include="src\iris_si_runtime\cognition\inference_trace.py" />
+    <Compile Include="src\iris_si_runtime\cognition\reasoning_engine.py" />
+    <Compile Include="src\iris_si_runtime\cognition\symbolic_graph.py" />
+    <Compile Include="src\iris_si_runtime\cognition\working_memory.py" />
+    <Compile Include="src\iris_si_runtime\cognition\__init__.py" />
+    <Compile Include="src\iris_si_runtime\config\environment.py" />
+    <Compile Include="src\iris_si_runtime\config\settings.py" />
+    <Compile Include="src\iris_si_runtime\config\__init__.py" />
+    <Compile Include="src\iris_si_runtime\core\contracts.py" />
+    <Compile Include="src\iris_si_runtime\core\errors.py" />
+    <Compile Include="src\iris_si_runtime\core\result.py" />
+    <Compile Include="src\iris_si_runtime\core\types.py" />
+    <Compile Include="src\iris_si_runtime\core\__init__.py" />
+    <Compile Include="src\iris_si_runtime\diagnostics\logging.py" />
+    <Compile Include="src\iris_si_runtime\diagnostics\metrics.py" />
+    <Compile Include="src\iris_si_runtime\diagnostics\trace.py" />
+    <Compile Include="src\iris_si_runtime\diagnostics\__init__.py" />
+    <Compile Include="src\iris_si_runtime\infrastructure\clock.py" />
+    <Compile Include="src\iris_si_runtime\infrastructure\http.py" />
+    <Compile Include="src\iris_si_runtime\infrastructure\paths.py" />
+    <Compile Include="src\iris_si_runtime\infrastructure\serialization.py" />
+    <Compile Include="src\iris_si_runtime\infrastructure\__init__.py" />
+    <Compile Include="src\iris_si_runtime\main.py" />
+    <Compile Include="src\iris_si_runtime\runtime\execution_context.py" />
+    <Compile Include="src\iris_si_runtime\runtime\runtime_state.py" />
+    <Compile Include="src\iris_si_runtime\runtime\si_runtime.py" />
+    <Compile Include="src\iris_si_runtime\runtime\task_dispatcher.py" />
+    <Compile Include="src\iris_si_runtime\runtime\__init__.py" />
+    <Compile Include="src\iris_si_runtime\schemas\events.py" />
+    <Compile Include="src\iris_si_runtime\schemas\requests.py" />
+    <Compile Include="src\iris_si_runtime\schemas\responses.py" />
+    <Compile Include="src\iris_si_runtime\schemas\__init__.py" />
+    <Compile Include="src\iris_si_runtime\__init__.py" />
+    <Compile Include="src\iris_si_runtime\__main__.py" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="docs\" />
+    <Folder Include="scripts\" />
+    <Folder Include="src\" />
+    <Folder Include="src\iris_si_runtime\" />
+    <Folder Include="src\iris_si_runtime\adapters\" />
+    <Folder Include="src\iris_si_runtime\api\" />
+    <Folder Include="src\iris_si_runtime\cognition\" />
+    <Folder Include="src\iris_si_runtime\config\" />
+    <Folder Include="src\iris_si_runtime\core\" />
+    <Folder Include="src\iris_si_runtime\diagnostics\" />
+    <Folder Include="src\iris_si_runtime\infrastructure\" />
+    <Folder Include="src\iris_si_runtime\runtime\" />
+    <Folder Include="src\iris_si_runtime\schemas\" />
+    <Folder Include="tests\" />
+    <Folder Include="tests\contract\" />
+    <Folder Include="tests\integration\" />
+    <Folder Include="tests\unit\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
+  <!-- Uncomment the CoreCompile target to enable the Build command in
+       Visual Studio and specify your pre- and post-build commands in
+       the BeforeBuild and AfterBuild targets below. -->
+  <!--<Target Name="CoreCompile" />-->
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+</Project>

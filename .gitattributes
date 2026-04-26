@@ -1,0 +1,18 @@
+* text=auto
+
+*.cs text
+*.csproj text
+*.slnx text
+*.axaml text
+*.json text
+*.md text
+*.py text
+*.txt text
+*.yml text
+*.yaml text
+
+*.ico binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary

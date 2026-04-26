@@ -1,0 +1,73 @@
+Структура папок тома SSD
+Серийный номер тома: D842-32EC
+E:\WORK\IRIS\SRC\IRIS.VOICE
+|   DependencyInjection.cs
+|   Iris.Voice.csproj
+|   
++---Audio
+|       AudioBuffer.cs
+|       AudioDurationLimiter.cs
+|       AudioEncoding.cs
+|       AudioFileWriter.cs
+|       AudioFormat.cs
+|       AudioSampleRate.cs
+|       AudioStreamFactory.cs
+|       
++---Devices
+|       AudioDevice.cs
+|       AudioDeviceKind.cs
+|       AudioDeviceOptions.cs
+|       AudioDeviceProvider.cs
+|       
++---Diagnostics
+|       VoiceDiagnosticsLogger.cs
+|       VoiceError.cs
+|       VoiceErrorCode.cs
+|       VoiceTrace.cs
+|       
++---Mapping
+|       SpeechToTextMapper.cs
+|       TextToSpeechMapper.cs
+|       VoiceErrorMapper.cs
+|       
++---Options
+|       PlaybackOptions.cs
+|       RecordingOptions.cs
+|       SpeechToTextOptions.cs
+|       TextToSpeechOptions.cs
+|       VoiceOptions.cs
+|       
++---Playback
+|       AudioOutputDeviceSelector.cs
+|       AudioPlaybackRequest.cs
+|       AudioPlaybackResult.cs
+|       AudioPlaybackService.cs
+|       
++---Providers
+|   +---Local
+|   |       LocalSpeechToTextClient.cs
+|   |       LocalTextToSpeechClient.cs
+|   |       LocalVoiceProviderKind.cs
+|   |       LocalVoiceProviderOptions.cs
+|   |       
+|   +---Stub
+|   |       StubSpeechToTextClient.cs
+|   |       StubTextToSpeechClient.cs
+|   |       
+|   \---Windows
+|           WindowsAudioPlaybackService.cs
+|           WindowsAudioRecorder.cs
+|           WindowsVoiceDeviceProvider.cs
+|           
++---Recording
+|       AudioInputDeviceSelector.cs
+|       AudioRecorder.cs
+|       AudioRecordingRequest.cs
+|       AudioRecordingResult.cs
+|       
++---SpeechToText
+|       SpeechToTextClient.cs
+|       
+\---TextToSpeech
+        TextToSpeechClient.cs
+        
