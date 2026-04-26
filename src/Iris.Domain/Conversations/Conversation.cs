@@ -52,6 +52,40 @@ public sealed class Conversation
             createdAt);
     }
 
+    public static Conversation Rehydrate(
+        ConversationId id,
+        ConversationTitle? title,
+        ConversationStatus status,
+        ConversationMode mode,
+        DateTimeOffset createdAt,
+        DateTimeOffset updatedAt)
+    {
+        if (!Enum.IsDefined(status))
+        {
+            throw new DomainException("conversation.invalid_status", "Conversation status is invalid.");
+        }
+
+        if (!Enum.IsDefined(mode))
+        {
+            throw new DomainException("conversation.invalid_mode", "Conversation mode is invalid.");
+        }
+
+        if (updatedAt < createdAt)
+        {
+            throw new DomainException(
+                "conversation.invalid_updated_at",
+                "Conversation updated timestamp cannot be earlier than created timestamp.");
+        }
+
+        return new Conversation(
+            id,
+            title,
+            status,
+            mode,
+            createdAt,
+            updatedAt);
+    }
+
     public void UpdateTitle(ConversationTitle title, DateTimeOffset updatedAt)
     {
         EnsureCanUpdate(updatedAt);

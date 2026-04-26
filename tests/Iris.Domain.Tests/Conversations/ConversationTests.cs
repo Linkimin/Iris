@@ -1,3 +1,4 @@
+using Iris.Domain.Common;
 using Iris.Domain.Conversations;
 
 namespace Iris.Domain.Tests.Conversations;
@@ -28,10 +29,86 @@ public sealed class ConversationTests
     {
         var createdAt = new DateTimeOffset(2026, 4, 26, 10, 0, 0, TimeSpan.Zero);
 
-        var exception = Assert.Throws<Iris.Domain.Common.DomainException>(() =>
+        var exception = Assert.Throws<DomainException>(() =>
             Conversation.Create(ConversationId.New(), null, mode, createdAt));
 
         Assert.Equal("conversation.invalid_mode", exception.Code);
+    }
+
+    [Fact]
+    public void Rehydrate_WithPersistedState_RestoresConversation()
+    {
+        var id = ConversationId.New();
+        var createdAt = new DateTimeOffset(2026, 4, 27, 10, 0, 0, TimeSpan.Zero);
+        var updatedAt = createdAt.AddMinutes(5);
+        var title = ConversationTitle.Create("Saved chat");
+
+        var conversation = Conversation.Rehydrate(
+            id,
+            title,
+            ConversationStatus.Archived,
+            ConversationMode.Default,
+            createdAt,
+            updatedAt);
+
+        Assert.Equal(id, conversation.Id);
+        Assert.Equal(title, conversation.Title);
+        Assert.Equal(ConversationStatus.Archived, conversation.Status);
+        Assert.Equal(ConversationMode.Default, conversation.Mode);
+        Assert.Equal(createdAt, conversation.CreatedAt);
+        Assert.Equal(updatedAt, conversation.UpdatedAt);
+    }
+
+    [Theory]
+    [InlineData(0)]
+    [InlineData(999)]
+    public void Rehydrate_WithInvalidStatus_ThrowsDomainException(int status)
+    {
+        var createdAt = new DateTimeOffset(2026, 4, 27, 10, 0, 0, TimeSpan.Zero);
+
+        var exception = Assert.Throws<DomainException>(() => Conversation.Rehydrate(
+            ConversationId.New(),
+            null,
+            (ConversationStatus)status,
+            ConversationMode.Default,
+            createdAt,
+            createdAt));
+
+        Assert.Equal("conversation.invalid_status", exception.Code);
+    }
+
+    [Theory]
+    [InlineData(0)]
+    [InlineData(999)]
+    public void Rehydrate_WithInvalidMode_ThrowsDomainException(int mode)
+    {
+        var createdAt = new DateTimeOffset(2026, 4, 27, 10, 0, 0, TimeSpan.Zero);
+
+        var exception = Assert.Throws<DomainException>(() => Conversation.Rehydrate(
+            ConversationId.New(),
+            null,
+            ConversationStatus.Active,
+            (ConversationMode)mode,
+            createdAt,
+            createdAt));
+
+        Assert.Equal("conversation.invalid_mode", exception.Code);
+    }
+
+    [Fact]
+    public void Rehydrate_WithUpdatedAtBeforeCreatedAt_ThrowsDomainException()
+    {
+        var createdAt = new DateTimeOffset(2026, 4, 27, 10, 0, 0, TimeSpan.Zero);
+
+        var exception = Assert.Throws<DomainException>(() => Conversation.Rehydrate(
+            ConversationId.New(),
+            null,
+            ConversationStatus.Active,
+            ConversationMode.Default,
+            createdAt,
+            createdAt.AddTicks(-1)));
+
+        Assert.Equal("conversation.invalid_updated_at", exception.Code);
     }
 
     [Fact]
@@ -65,7 +142,7 @@ public sealed class ConversationTests
         var createdAt = new DateTimeOffset(2026, 4, 26, 10, 0, 0, TimeSpan.Zero);
         var conversation = Conversation.Create(ConversationId.New(), null, ConversationMode.Default, createdAt);
 
-        var exception = Assert.Throws<Iris.Domain.Common.DomainException>(() =>
+        var exception = Assert.Throws<DomainException>(() =>
             conversation.Touch(createdAt.AddTicks(-1)));
 
         Assert.Equal("conversation.invalid_updated_at", exception.Code);
@@ -77,7 +154,7 @@ public sealed class ConversationTests
         var createdAt = new DateTimeOffset(2026, 4, 26, 10, 0, 0, TimeSpan.Zero);
         var conversation = Conversation.Create(ConversationId.New(), null, ConversationMode.Default, createdAt);
 
-        var exception = Assert.Throws<Iris.Domain.Common.DomainException>(() =>
+        var exception = Assert.Throws<DomainException>(() =>
             conversation.UpdateTitle(ConversationTitle.Create("New title"), createdAt.AddTicks(-1)));
 
         Assert.Equal("conversation.invalid_updated_at", exception.Code);
@@ -89,7 +166,7 @@ public sealed class ConversationTests
         var createdAt = new DateTimeOffset(2026, 4, 26, 10, 0, 0, TimeSpan.Zero);
         var conversation = Conversation.Create(ConversationId.New(), null, ConversationMode.Default, createdAt);
 
-        var exception = Assert.Throws<Iris.Domain.Common.DomainException>(() =>
+        var exception = Assert.Throws<DomainException>(() =>
             conversation.Archive(createdAt.AddTicks(-1)));
 
         Assert.Equal("conversation.invalid_updated_at", exception.Code);
@@ -101,7 +178,7 @@ public sealed class ConversationTests
         var createdAt = new DateTimeOffset(2026, 4, 26, 10, 0, 0, TimeSpan.Zero);
         var conversation = Conversation.Create(ConversationId.New(), null, ConversationMode.Default, createdAt);
 
-        var exception = Assert.Throws<Iris.Domain.Common.DomainException>(() =>
+        var exception = Assert.Throws<DomainException>(() =>
             conversation.Close(createdAt.AddTicks(-1)));
 
         Assert.Equal("conversation.invalid_updated_at", exception.Code);
