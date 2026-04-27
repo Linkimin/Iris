@@ -53,6 +53,54 @@ public sealed class SendMessageHandlerTests
     }
 
     [Fact]
+    public async Task HandleAsync_WithExistingConversation_UpdatesTouchedConversation()
+    {
+        var initialTime = new DateTimeOffset(2026, 4, 26, 10, 0, 0, TimeSpan.Zero);
+        var touchedTime = initialTime.AddMinutes(5);
+        var clock = new FakeClock(initialTime, touchedTime);
+        var conversation = Conversation.Create(ConversationId.New(), null, ConversationMode.Default, initialTime);
+        var conversations = new FakeConversationRepository();
+        conversations.Stored[conversation.Id] = conversation;
+        var messages = new FakeMessageRepository();
+        var unitOfWork = new FakeUnitOfWork();
+        var model = new FakeChatModelClient(Result<ChatModelResponse>.Success(new ChatModelResponse("Assistant reply")));
+        var handler = CreateHandler(conversations, messages, unitOfWork, model, clock);
+
+        var result = await handler.HandleAsync(new SendMessageCommand(conversation.Id, "Hello"), CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Empty(conversations.Added);
+        Assert.Single(conversations.Updated);
+        Assert.Equal(conversation.Id, conversations.Updated[0].Id);
+        Assert.Equal(touchedTime, conversations.Updated[0].UpdatedAt);
+    }
+
+    [Fact]
+    public async Task HandleAsync_WhenExistingConversationUpdateThrows_ReturnsControlledError()
+    {
+        var initialTime = new DateTimeOffset(2026, 4, 26, 10, 0, 0, TimeSpan.Zero);
+        var clock = new FakeClock(initialTime, initialTime.AddMinutes(5));
+        var conversation = Conversation.Create(ConversationId.New(), null, ConversationMode.Default, initialTime);
+        var conversations = new FakeConversationRepository
+        {
+            UpdateException = new InvalidOperationException("Update failed.")
+        };
+        conversations.Stored[conversation.Id] = conversation;
+        var messages = new FakeMessageRepository();
+        var unitOfWork = new FakeUnitOfWork();
+        var model = new FakeChatModelClient(Result<ChatModelResponse>.Success(new ChatModelResponse("Assistant reply")));
+        var handler = CreateHandler(conversations, messages, unitOfWork, model, clock);
+
+        var result = await handler.HandleAsync(new SendMessageCommand(conversation.Id, "Hello"), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("chat.message_save_failed", result.Error.Code);
+        Assert.Empty(conversations.Added);
+        Assert.Empty(messages.Added);
+        Assert.Equal(0, unitOfWork.CommitCalls);
+    }
+
+    [Fact]
     public async Task HandleAsync_WhenExistingConversationLoadThrows_ReturnsControlledError()
     {
         var clock = new FakeClock(new DateTimeOffset(2026, 4, 26, 10, 0, 0, TimeSpan.Zero));
@@ -276,12 +324,32 @@ public sealed class SendMessageHandlerTests
 
     private sealed class FakeClock : IClock
     {
-        public FakeClock(DateTimeOffset utcNow)
+        private readonly Queue<DateTimeOffset> _instants;
+        private DateTimeOffset _lastInstant;
+
+        public FakeClock(params DateTimeOffset[] instants)
         {
-            UtcNow = utcNow;
+            if (instants.Length == 0)
+            {
+                throw new ArgumentException("At least one instant is required.", nameof(instants));
+            }
+
+            _instants = new Queue<DateTimeOffset>(instants);
+            _lastInstant = instants[^1];
         }
 
-        public DateTimeOffset UtcNow { get; }
+        public DateTimeOffset UtcNow
+        {
+            get
+            {
+                if (_instants.Count > 0)
+                {
+                    _lastInstant = _instants.Dequeue();
+                }
+
+                return _lastInstant;
+            }
+        }
     }
 
     private sealed class FakeConversationRepository : IConversationRepository
@@ -290,7 +358,11 @@ public sealed class SendMessageHandlerTests
 
         public List<Conversation> Added { get; } = new();
 
+        public List<Conversation> Updated { get; } = new();
+
         public Exception? AddException { get; set; }
+
+        public Exception? UpdateException { get; set; }
 
         public Exception? GetByIdException { get; set; }
 
@@ -316,6 +388,18 @@ public sealed class SendMessageHandlerTests
             }
 
             Added.Add(conversation);
+            Stored[conversation.Id] = conversation;
+            return Task.CompletedTask;
+        }
+
+        public Task UpdateAsync(Conversation conversation, CancellationToken cancellationToken)
+        {
+            if (UpdateException is not null)
+            {
+                throw UpdateException;
+            }
+
+            Updated.Add(conversation);
             Stored[conversation.Id] = conversation;
             return Task.CompletedTask;
         }

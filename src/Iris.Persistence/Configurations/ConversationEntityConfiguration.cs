@@ -1,10 +1,44 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using Iris.Persistence.Entities;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace Iris.Persistence.Configurations
+namespace Iris.Persistence.Configurations;
+
+public sealed class ConversationEntityConfiguration : IEntityTypeConfiguration<ConversationEntity>
 {
-    internal class ConversationEntityConfiguration
+    private static readonly ValueConverter<DateTimeOffset, long> UtcTicksConverter = new(
+        value => value.UtcTicks,
+        value => new DateTimeOffset(value, TimeSpan.Zero));
+
+    public void Configure(EntityTypeBuilder<ConversationEntity> builder)
     {
+        builder.ToTable("conversations");
+
+        builder.HasKey(conversation => conversation.Id);
+
+        builder.Property(conversation => conversation.Id)
+            .ValueGeneratedNever();
+
+        builder.Property(conversation => conversation.Title)
+            .HasMaxLength(120);
+
+        builder.Property(conversation => conversation.Status)
+            .IsRequired();
+
+        builder.Property(conversation => conversation.Mode)
+            .IsRequired();
+
+        builder.Property(conversation => conversation.CreatedAt)
+            .HasConversion(UtcTicksConverter)
+            .HasColumnType("INTEGER")
+            .IsRequired();
+
+        builder.Property(conversation => conversation.UpdatedAt)
+            .HasConversion(UtcTicksConverter)
+            .HasColumnType("INTEGER")
+            .IsRequired();
+
+        builder.HasIndex(conversation => conversation.UpdatedAt);
     }
 }

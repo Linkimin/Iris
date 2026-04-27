@@ -131,6 +131,10 @@ public sealed class SendMessageHandler
             {
                 await _conversationRepository.AddAsync(conversation, cancellationToken);
             }
+            else
+            {
+                await _conversationRepository.UpdateAsync(conversation, cancellationToken);
+            }
 
             await _messageRepository.AddAsync(userMessage, cancellationToken);
             await _messageRepository.AddAsync(assistantMessage, cancellationToken);

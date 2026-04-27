@@ -1,5 +1,6 @@
 # Local agent memory
 .agent/
+docs/.agent.7z
 
 # Visual Studio / Rider / local IDE state
 .vs/

@@ -1,10 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+namespace Iris.Persistence.Database;
 
-namespace Iris.Persistence.Database
+public sealed class DatabaseOptions
 {
-    internal class DatabaseOptions
+    public string ConnectionString { get; set; } = string.Empty;
+
+    public void Validate()
     {
+        if (string.IsNullOrWhiteSpace(ConnectionString))
+        {
+            throw new InvalidOperationException("Database connection string is required.");
+        }
     }
 }
