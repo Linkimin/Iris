@@ -24,6 +24,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\Iris.Application\Iris.Application.csproj" />
     <ProjectReference Include="..\..\src\Iris.Domain\Iris.Domain.csproj" />
+    <ProjectReference Include="..\..\src\Iris.ModelGateway\Iris.ModelGateway.csproj" />
     <ProjectReference Include="..\..\src\Iris.Persistence\Iris.Persistence.csproj" />
     <ProjectReference Include="..\..\src\Iris.Shared\Iris.Shared.csproj" />
   </ItemGroup>

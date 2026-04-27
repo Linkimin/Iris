@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+namespace Iris.ModelGateway.Http;
 
-namespace Iris.ModelGateway.Http
+internal static class ModelGatewayHttpClientNames
 {
-    internal class ModelGatewayHttpClientNames
-    {
-    }
+    public const string Ollama = "Iris.ModelGateway.Ollama";
 }
