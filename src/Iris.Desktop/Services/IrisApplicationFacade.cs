@@ -1,26 +1,31 @@
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Iris.Application.Chat.SendMessage;
 using Iris.Domain.Conversations;
 using Iris.Shared.Results;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Iris.Desktop.Services;
 
 public sealed class IrisApplicationFacade : IIrisApplicationFacade
 {
-    private readonly SendMessageHandler _sendMessageHandler;
+    private readonly IServiceScopeFactory _scopeFactory;
 
-    public IrisApplicationFacade(SendMessageHandler sendMessageHandler)
+    public IrisApplicationFacade(IServiceScopeFactory scopeFactory)
     {
-        _sendMessageHandler = sendMessageHandler;
+        _scopeFactory = scopeFactory ?? throw new ArgumentNullException(nameof(scopeFactory));
     }
 
-    public Task<Result<SendMessageResult>> SendMessageAsync(
+    public async Task<Result<SendMessageResult>> SendMessageAsync(
         ConversationId? conversationId,
         string message,
         CancellationToken cancellationToken)
     {
-        return _sendMessageHandler.HandleAsync(
+        await using var scope = _scopeFactory.CreateAsyncScope();
+        var sendMessageHandler = scope.ServiceProvider.GetRequiredService<SendMessageHandler>();
+
+        return await sendMessageHandler.HandleAsync(
             new SendMessageCommand(conversationId, message),
             cancellationToken);
     }

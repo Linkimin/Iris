@@ -1,6 +1,7 @@
 using System;
 using Iris.Application;
 using Iris.Application.Chat.SendMessage;
+using Iris.Desktop.Services;
 using Iris.Desktop.ViewModels;
 using Iris.ModelGateway;
 using Iris.Persistence;
@@ -52,6 +53,8 @@ internal static class DependencyInjection
             options.Timeout = TimeSpan.FromSeconds(ollamaTimeoutSeconds);
         });
 
+        services.AddSingleton<IIrisApplicationFacade, IrisApplicationFacade>();
+        services.AddTransient<ChatViewModel>();
         services.AddTransient<MainWindowViewModel>();
 
         return services;
