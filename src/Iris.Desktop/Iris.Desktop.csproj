@@ -26,12 +26,22 @@
       <PrivateAssets Condition="'$(Configuration)' != 'Debug'">All</PrivateAssets>
     </PackageReference>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="10.0.7" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="10.0.7" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.7" />
     <PackageReference Include="Tmds.DBus.Protocol" Version="0.92.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Iris.Application\Iris.Application.csproj" />
     <ProjectReference Include="..\Iris.Domain\Iris.Domain.csproj" />
+    <ProjectReference Include="..\Iris.ModelGateway\Iris.ModelGateway.csproj" />
+    <ProjectReference Include="..\Iris.Persistence\Iris.Persistence.csproj" />
     <ProjectReference Include="..\Iris.Shared\Iris.Shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="appsettings.json" CopyToOutputDirectory="PreserveNewest" />
+    <None Update="appsettings.local.json" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 </Project>

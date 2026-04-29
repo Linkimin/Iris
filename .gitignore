@@ -36,6 +36,7 @@ project.assets.json
 *.nuget.g.targets
 
 # Local app data / databases / logs
+src/Iris.Desktop/appsettings.local.json
 data/
 *.db
 *.db-shm

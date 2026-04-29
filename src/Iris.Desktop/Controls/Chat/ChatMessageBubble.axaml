@@ -1,5 +1,22 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             x:Class="Iris.Desktop.Controls.ChatMessageBubble">
-  <Grid />
+             xmlns:models="using:Iris.Desktop.Models"
+             x:Class="Iris.Desktop.Controls.ChatMessageBubble"
+             x:DataType="models:ChatMessageViewModelItem">
+  <Border Padding="12"
+          CornerRadius="8"
+          BorderThickness="1"
+          BorderBrush="#2A3140"
+          Background="#1B2130"
+          MaxWidth="760"
+          HorizontalAlignment="Stretch">
+    <StackPanel Spacing="4">
+      <TextBlock Text="{Binding Author}"
+                 FontWeight="SemiBold"
+                 Foreground="#F2F4F8" />
+      <TextBlock Text="{Binding Content}"
+                 TextWrapping="Wrap"
+                 Foreground="#D9DEE8" />
+    </StackPanel>
+  </Border>
 </UserControl>
