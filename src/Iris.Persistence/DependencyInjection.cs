@@ -27,6 +27,7 @@ public static class DependencyInjection
         services.AddScoped<IConversationRepository, ConversationRepository>();
         services.AddScoped<IMessageRepository, MessageRepository>();
         services.AddScoped<IUnitOfWork, EfUnitOfWork>();
+        services.AddScoped<IIrisDatabaseInitializer, IrisDatabaseInitializer>();
 
         return services;
     }
