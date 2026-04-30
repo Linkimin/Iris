@@ -5,8 +5,8 @@ namespace Iris.ModelGateway.Ollama;
 
 internal static class OllamaRequestMapper
 {
-    private const double MinimumTemperature = 0.0;
-    private const double MaximumTemperature = 2.0;
+    private const double _minimumTemperature = 0.0;
+    private const double _maximumTemperature = 2.0;
 
     public static Result<OllamaChatRequest> Map(
         ChatModelRequest? request,
@@ -40,8 +40,8 @@ internal static class OllamaRequestMapper
         if (chatOptions.Temperature is { } temperature &&
             (double.IsNaN(temperature) ||
              double.IsInfinity(temperature) ||
-             temperature < MinimumTemperature ||
-             temperature > MaximumTemperature))
+             temperature < _minimumTemperature ||
+             temperature > _maximumTemperature))
         {
             return Result<OllamaChatRequest>.Failure(Error.Validation(
                 "model_gateway.request.temperature_invalid",

@@ -5,7 +5,7 @@ namespace Iris.Persistence.Mapping;
 
 public static class MessageMapper
 {
-    private const string EmptyMetadataJson = "{}";
+    private const string _emptyMetadataJson = "{}";
 
     public static MessageEntity ToEntity(Message message)
     {
@@ -16,7 +16,7 @@ public static class MessageMapper
             Role = (int)message.Role,
             Content = message.Content.Value,
             CreatedAt = message.CreatedAt,
-            MetadataJson = EmptyMetadataJson
+            MetadataJson = _emptyMetadataJson
         };
     }
 

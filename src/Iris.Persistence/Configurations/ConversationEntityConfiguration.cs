@@ -8,7 +8,7 @@ namespace Iris.Persistence.Configurations;
 
 public sealed class ConversationEntityConfiguration : IEntityTypeConfiguration<ConversationEntity>
 {
-    private static readonly ValueConverter<DateTimeOffset, long> UtcTicksConverter = new(
+    private static readonly ValueConverter<DateTimeOffset, long> _utcTicksConverter = new(
         value => value.UtcTicks,
         value => new DateTimeOffset(value, TimeSpan.Zero));
 
@@ -31,12 +31,12 @@ public sealed class ConversationEntityConfiguration : IEntityTypeConfiguration<C
             .IsRequired();
 
         builder.Property(conversation => conversation.CreatedAt)
-            .HasConversion(UtcTicksConverter)
+            .HasConversion(_utcTicksConverter)
             .HasColumnType("INTEGER")
             .IsRequired();
 
         builder.Property(conversation => conversation.UpdatedAt)
-            .HasConversion(UtcTicksConverter)
+            .HasConversion(_utcTicksConverter)
             .HasColumnType("INTEGER")
             .IsRequired();
 

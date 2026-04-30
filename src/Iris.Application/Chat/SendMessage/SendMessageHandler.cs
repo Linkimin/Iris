@@ -11,7 +11,7 @@ namespace Iris.Application.Chat.SendMessage;
 
 public sealed class SendMessageHandler
 {
-    private const int RecentMessageLimit = 20;
+    private const int _recentMessageLimit = 20;
 
     private readonly IConversationRepository _conversationRepository;
     private readonly IMessageRepository _messageRepository;
@@ -78,7 +78,7 @@ public sealed class SendMessageHandler
         {
             history = await _messageRepository.ListRecentAsync(
                 conversation.Id,
-                RecentMessageLimit,
+                _recentMessageLimit,
                 cancellationToken);
         }
         catch (Exception exception) when (exception is not OperationCanceledException)

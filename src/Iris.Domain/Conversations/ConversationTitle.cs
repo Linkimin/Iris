@@ -4,7 +4,7 @@ namespace Iris.Domain.Conversations;
 
 public sealed record ConversationTitle
 {
-    private const int MaxLength = 120;
+    private const int _maxLength = 120;
 
     private ConversationTitle(string value)
     {
@@ -22,7 +22,7 @@ public sealed record ConversationTitle
 
         var trimmed = value.Trim();
 
-        if (trimmed.Length > MaxLength)
+        if (trimmed.Length > _maxLength)
         {
             throw new DomainException("conversation.title_too_long", "Conversation title is too long.");
         }

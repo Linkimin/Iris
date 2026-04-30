@@ -11,7 +11,7 @@ namespace Iris.ModelGateway.Ollama;
 
 internal sealed class OllamaChatModelClient : IChatModelClient
 {
-    private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web)
+    private static readonly JsonSerializerOptions _jsonOptions = new(JsonSerializerDefaults.Web)
     {
         DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
     };
@@ -48,7 +48,7 @@ internal sealed class OllamaChatModelClient : IChatModelClient
             using HttpResponseMessage response = await _httpClient.PostAsJsonAsync(
                 "/api/chat",
                 mappedRequest.Value,
-                JsonOptions,
+                _jsonOptions,
                 cancellationToken);
 
             if (!response.IsSuccessStatusCode)
@@ -58,7 +58,7 @@ internal sealed class OllamaChatModelClient : IChatModelClient
             }
 
             OllamaChatResponse? ollamaResponse = await response.Content.ReadFromJsonAsync<OllamaChatResponse>(
-                JsonOptions,
+                _jsonOptions,
                 cancellationToken);
 
             return OllamaResponseMapper.Map(ollamaResponse);
