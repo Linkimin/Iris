@@ -50,163 +50,27 @@ If the plan references files or abstractions, verify that they actually exist be
 
 ## Core Rules
 
-### 1. Implement the Plan Only
+Hard prohibitions live in `.opencode/rules/workflow.md`, `.opencode/rules/iris-architecture.md`, `.opencode/rules/no-shortcuts.md`, `.opencode/rules/dotnet.md`, and `.opencode/rules/verification.md`.
 
-Do not:
+### 1. Only the Plan
 
-- introduce new requirements;
-- change acceptance criteria;
-- redesign the architecture;
-- change public contracts beyond the plan;
-- add unrelated refactors;
-- perform broad cleanup;
-- add speculative abstractions;
-- change formatting across unrelated files.
+Do not introduce new requirements, change public contracts beyond the plan, add unrelated refactors, or add speculative abstractions. Every changed file must be justified by the plan.
 
-If the plan is unsafe, incomplete, or conflicts with the repository, stop and report the issue.
+### 2. Minimal Diff, Inspect First
 
-### 2. Keep the Diff Minimal
+Prefer small focused changes, existing abstractions, and existing patterns. Before creating a file, check existing structure. Before adding a package, check existing dependencies and central package management.
 
-Every changed file must be justified by the plan.
+### 3. Architecture and Error Handling
 
-Prefer:
+Preserve boundaries: no UI→persistence, UI→providers, Domain→infrastructure, Application→concrete adapters. Implement failure behavior as specified — don't swallow exceptions, leak provider exceptions through application contracts, or log sensitive data.
 
-- small focused changes;
-- existing abstractions;
-- existing naming conventions;
-- existing folder structure;
-- existing testing patterns.
+### 4. Tests and Verification
 
-Avoid:
+Tests must be added or updated where behavior changes. Run the narrowest useful verification first. Report partial completion honestly — completed work, skipped work, failed checks, known risks.
 
-- parallel duplicate abstractions;
-- broad rewrites;
-- large formatting changes;
-- touching files outside the affected area;
-- adding dependencies without explicit plan approval.
+### 5. Documentation and Memory
 
-### 3. Inspect Before Creating Files
-
-Before creating a new file, check whether a suitable file, folder, abstraction, placeholder, or convention already exists.
-
-Create new files only when:
-
-- the plan requires it;
-- no suitable existing location exists;
-- the new file has a clear owner;
-- the new file follows project naming conventions.
-
-### 4. Preserve Architecture Boundaries
-
-Do not implement shortcuts such as:
-
-- UI directly calls persistence;
-- UI directly calls model providers;
-- Domain references infrastructure;
-- Application references concrete adapters;
-- Tools own permission decisions;
-- Voice owns chat orchestration;
-- Perception owns memory extraction;
-- hosts own business logic.
-
-If a requested implementation requires a boundary violation, stop and report it.
-
-### 5. Respect Dependency Ownership
-
-New dependencies must be added only when necessary and approved by the plan.
-
-Before adding a dependency:
-
-- check whether an existing dependency already solves the problem;
-- check central package management if present;
-- add it in the correct project only;
-- document why it is needed;
-- verify restore/build.
-
-Do not add packages casually.
-
-### 6. Tests Are Part of Implementation
-
-If behavior changes, add or update tests.
-
-Test changes must be tied to the implemented behavior.
-
-Prefer:
-
-- unit tests for domain/application behavior;
-- adapter tests for persistence/model/tools/voice/perception behavior;
-- integration tests for wiring and real infrastructure seams;
-- architecture tests for dependency rules;
-- regression tests for fixed defects.
-
-Avoid:
-
-- tests without assertions;
-- over-mocking;
-- tests that mirror implementation details;
-- broad snapshot tests without clear value;
-- deleting tests to make the suite pass.
-
-### 7. Error Handling Must Match Design
-
-Implement failure behavior as specified.
-
-Do not:
-
-- swallow exceptions silently;
-- leak provider/infrastructure exceptions through application contracts;
-- replace typed failures with generic strings unless the project convention uses them;
-- ignore cancellation tokens where async operations are involved;
-- log sensitive data.
-
-### 8. Documentation and Memory
-
-Update documentation when implementation changes:
-
-- public behavior;
-- architecture;
-- setup;
-- configuration;
-- contracts;
-- commands;
-- persistence schema;
-- operational behavior.
-
-Update `.agents/` memory files when present and required by project convention.
-
-Do not create or update docs merely to appear productive.
-
-### 9. Verification Is Required
-
-After implementation, run the narrowest useful verification first.
-
-Typical order:
-
-```bash
-dotnet build
-dotnet test
-dotnet format --verify-no-changes
-````
-
-Use repository-specific commands when available.
-
-If verification cannot be run, state why.
-
-Do not claim success unless the command was actually run and passed.
-
-### 10. Be Honest About Partial Completion
-
-If implementation is incomplete, say so clearly.
-
-Report:
-
-* completed work;
-* skipped work;
-* failed checks;
-* known risks;
-* required next step.
-
-Do not hide failures.
+Update docs when implementation changes public behavior, architecture, setup, configuration, contracts, or persistence schema. Update `.agent/` memory files when required by project convention.
 
 ## Pre-Implementation Gate Check
 
@@ -396,19 +260,15 @@ Before finalizing, verify:
 ## Anti-Patterns
 
 Avoid:
-
-* “while I was here” refactors;
-* implementing beyond the plan;
-* creating duplicate abstractions;
-* bypassing layers to make the feature work faster;
-* hiding failing tests;
-* removing tests instead of fixing behavior;
-* claiming commands passed without running them;
-* adding packages without need;
-* changing public contracts silently;
-* updating docs without actual behavior change;
-* broad formatting changes unrelated to the task;
-* using implementation as a reason to rewrite the design.
+- "while I was here" refactors or implementing beyond the plan;
+- creating duplicate abstractions;
+- bypassing layers to make features work faster;
+- hiding or removing failing tests;
+- claiming commands passed without running them;
+- adding packages without need;
+- changing public contracts silently;
+- broad formatting changes unrelated to the task;
+- using implementation as a reason to rewrite the design.
 
 ## Final Response Requirements
 
