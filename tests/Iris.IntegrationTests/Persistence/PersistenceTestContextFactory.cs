@@ -1,4 +1,5 @@
 using Iris.Persistence.Database;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace Iris.Integration.Tests.Persistence;
@@ -16,14 +17,14 @@ internal sealed class PersistenceTestContextFactory : IAsyncDisposable
 
     public async Task<IrisDbContext> CreateInitializedContextAsync()
     {
-        var context = CreateContext();
+        IrisDbContext context = CreateContext();
         await context.Database.EnsureCreatedAsync();
         return context;
     }
 
     public IrisDbContext CreateContext()
     {
-        var options = new DbContextOptionsBuilder<IrisDbContext>()
+        DbContextOptions<IrisDbContext> options = new DbContextOptionsBuilder<IrisDbContext>()
             .UseSqlite($"Data Source={_databasePath}")
             .Options;
 
@@ -32,7 +33,7 @@ internal sealed class PersistenceTestContextFactory : IAsyncDisposable
 
     public async ValueTask DisposeAsync()
     {
-        await using var context = CreateContext();
+        await using IrisDbContext context = CreateContext();
         await context.Database.EnsureDeletedAsync();
 
         if (File.Exists(_databasePath))

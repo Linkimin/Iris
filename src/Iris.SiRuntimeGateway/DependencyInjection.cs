@@ -1,4 +1,4 @@
-﻿namespace Iris.SiRuntimeGateway
+namespace Iris.SiRuntimeGateway
 {
     public class DependencyInjection
     {

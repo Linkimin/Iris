@@ -1,4 +1,4 @@
-﻿namespace Iris.Api.Security
+namespace Iris.Api.Security
 {
     public class ApiSecurityOptions
     {

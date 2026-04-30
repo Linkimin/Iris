@@ -1,4 +1,4 @@
-﻿namespace Iris.Infrastructure
+namespace Iris.Infrastructure
 {
     public class Class1
     {

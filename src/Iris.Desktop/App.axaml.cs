@@ -1,12 +1,16 @@
 using System;
 using System.Threading;
+
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
+
 using Iris.Desktop.ViewModels;
 using Iris.Desktop.Views;
 using Iris.Persistence.Database;
+
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+
 using AvaloniaApplication = Avalonia.Application;
 
 namespace Iris.Desktop
@@ -24,7 +28,7 @@ namespace Iris.Desktop
         {
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
-                var configuration = BuildConfiguration();
+                IConfiguration configuration = BuildConfiguration();
                 _serviceProvider = BuildServiceProvider(configuration);
                 InitializeDatabase(_serviceProvider);
 
@@ -57,8 +61,8 @@ namespace Iris.Desktop
 
         private static void InitializeDatabase(IServiceProvider serviceProvider)
         {
-            using var scope = serviceProvider.CreateScope();
-            var initializer = scope.ServiceProvider.GetRequiredService<IIrisDatabaseInitializer>();
+            using IServiceScope scope = serviceProvider.CreateScope();
+            IIrisDatabaseInitializer initializer = scope.ServiceProvider.GetRequiredService<IIrisDatabaseInitializer>();
             initializer.InitializeAsync(CancellationToken.None).GetAwaiter().GetResult();
         }
     }

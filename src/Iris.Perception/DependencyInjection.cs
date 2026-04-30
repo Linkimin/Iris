@@ -1,4 +1,4 @@
-﻿namespace Iris.Perception
+namespace Iris.Perception
 {
     public class DependencyInjection
     {

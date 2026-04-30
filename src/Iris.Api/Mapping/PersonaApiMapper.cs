@@ -1,4 +1,4 @@
-﻿namespace Iris.Api.Mapping
+namespace Iris.Api.Mapping
 {
     public class PersonaApiMapper
     {

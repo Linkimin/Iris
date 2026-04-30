@@ -1,4 +1,5 @@
 using System;
+
 using Iris.Application.Chat.Contracts;
 using Iris.Domain.Conversations;
 

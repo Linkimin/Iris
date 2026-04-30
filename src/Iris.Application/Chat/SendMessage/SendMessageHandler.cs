@@ -1,3 +1,4 @@
+using Iris.Application.Abstractions.Models.Contracts.Chat;
 using Iris.Application.Abstractions.Models.Interfaces;
 using Iris.Application.Abstractions.Persistence;
 using Iris.Application.Chat.Contracts;
@@ -10,7 +11,7 @@ namespace Iris.Application.Chat.SendMessage;
 
 public sealed class SendMessageHandler
 {
-    private const int RecentMessageLimit = 20;
+    private const int _recentMessageLimit = 20;
 
     private readonly IConversationRepository _conversationRepository;
     private readonly IMessageRepository _messageRepository;
@@ -42,15 +43,15 @@ public sealed class SendMessageHandler
         SendMessageCommand command,
         CancellationToken cancellationToken)
     {
-        var validation = _validator.Validate(command);
+        Result validation = _validator.Validate(command);
 
         if (validation.IsFailure)
         {
             return Result<SendMessageResult>.Failure(validation.Error);
         }
 
-        var now = _clock.UtcNow;
-        var conversationResult = await LoadOrCreateConversationAsync(
+        DateTimeOffset now = _clock.UtcNow;
+        Result<ConversationLoadResult> conversationResult = await LoadOrCreateConversationAsync(
             command.ConversationId,
             now,
             cancellationToken);
@@ -60,7 +61,7 @@ public sealed class SendMessageHandler
             return Result<SendMessageResult>.Failure(conversationResult.Error);
         }
 
-        var conversation = conversationResult.Value.Conversation;
+        Conversation conversation = conversationResult.Value.Conversation;
         var isNewConversation = conversationResult.Value.IsNewConversation;
         var userContent = MessageContent.Create(command.Message);
         var userMessage = Message.Create(
@@ -77,7 +78,7 @@ public sealed class SendMessageHandler
         {
             history = await _messageRepository.ListRecentAsync(
                 conversation.Id,
-                RecentMessageLimit,
+                _recentMessageLimit,
                 cancellationToken);
         }
         catch (Exception exception) when (exception is not OperationCanceledException)
@@ -91,14 +92,14 @@ public sealed class SendMessageHandler
             .OrderBy(message => message.CreatedAt)
             .ToList();
 
-        var promptResult = _promptBuilder.Build(new PromptBuildRequest(chronologicalHistory, userContent));
+        Result<PromptBuildResult> promptResult = _promptBuilder.Build(new PromptBuildRequest(chronologicalHistory, userContent));
 
         if (promptResult.IsFailure)
         {
             return Result<SendMessageResult>.Failure(promptResult.Error);
         }
 
-        var modelResponse = await _chatModelClient.SendAsync(
+        Result<ChatModelResponse> modelResponse = await _chatModelClient.SendAsync(
             promptResult.Value.ModelRequest,
             cancellationToken);
 
@@ -114,7 +115,7 @@ public sealed class SendMessageHandler
                 "The model returned an empty response."));
         }
 
-        var assistantMessageCreatedAt = _clock.UtcNow;
+        DateTimeOffset assistantMessageCreatedAt = _clock.UtcNow;
         var assistantMessage = Message.Create(
             MessageId.New(),
             conversation.Id,

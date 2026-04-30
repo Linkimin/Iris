@@ -2,10 +2,14 @@ using System;
 using System.Collections.ObjectModel;
 using System.Threading;
 using System.Threading.Tasks;
+
 using CommunityToolkit.Mvvm.Input;
+
+using Iris.Application.Chat.SendMessage;
 using Iris.Desktop.Models;
 using Iris.Desktop.Services;
 using Iris.Domain.Conversations;
+using Iris.Shared.Results;
 
 namespace Iris.Desktop.ViewModels;
 
@@ -86,7 +90,7 @@ public sealed class ChatViewModel : ViewModelBase
 
         try
         {
-            var result = await _facade.SendMessageAsync(
+            Result<SendMessageResult> result = await _facade.SendMessageAsync(
                 _conversationId,
                 message,
                 CancellationToken.None);

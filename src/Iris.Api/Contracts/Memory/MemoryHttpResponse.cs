@@ -1,4 +1,4 @@
-﻿namespace Iris.Api.Contracts.Memory
+namespace Iris.Api.Contracts.Memory
 {
     public class MemoryHttpResponse
     {

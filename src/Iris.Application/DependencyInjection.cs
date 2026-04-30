@@ -2,6 +2,7 @@ using Iris.Application.Chat.Prompting;
 using Iris.Application.Chat.SendMessage;
 using Iris.Shared.Time;
 using Iris.Shared.Time.Interfaces;
+
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Iris.Application;

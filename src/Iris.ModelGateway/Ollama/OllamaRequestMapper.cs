@@ -5,8 +5,8 @@ namespace Iris.ModelGateway.Ollama;
 
 internal static class OllamaRequestMapper
 {
-    private const double MinimumTemperature = 0.0;
-    private const double MaximumTemperature = 2.0;
+    private const double _minimumTemperature = 0.0;
+    private const double _maximumTemperature = 2.0;
 
     public static Result<OllamaChatRequest> Map(
         ChatModelRequest? request,
@@ -28,7 +28,7 @@ internal static class OllamaRequestMapper
                 "Chat model request must contain at least one message."));
         }
 
-        var chatOptions = request.Options ?? new ChatModelOptions();
+        ChatModelOptions chatOptions = request.Options ?? new ChatModelOptions();
         var model = ResolveModel(chatOptions.Model, options.ChatModel);
         if (string.IsNullOrWhiteSpace(model))
         {
@@ -40,8 +40,8 @@ internal static class OllamaRequestMapper
         if (chatOptions.Temperature is { } temperature &&
             (double.IsNaN(temperature) ||
              double.IsInfinity(temperature) ||
-             temperature < MinimumTemperature ||
-             temperature > MaximumTemperature))
+             temperature < _minimumTemperature ||
+             temperature > _maximumTemperature))
         {
             return Result<OllamaChatRequest>.Failure(Error.Validation(
                 "model_gateway.request.temperature_invalid",
@@ -49,7 +49,7 @@ internal static class OllamaRequestMapper
         }
 
         var messages = new List<OllamaChatMessage>(request.Messages.Count);
-        foreach (var message in request.Messages)
+        foreach (ChatModelMessage message in request.Messages)
         {
             if (string.IsNullOrWhiteSpace(message.Content))
             {
@@ -69,7 +69,7 @@ internal static class OllamaRequestMapper
             messages.Add(new OllamaChatMessage(role, message.Content));
         }
 
-        var requestOptions = chatOptions.Temperature is null
+        OllamaChatOptions? requestOptions = chatOptions.Temperature is null
             ? null
             : new OllamaChatOptions(chatOptions.Temperature);
 

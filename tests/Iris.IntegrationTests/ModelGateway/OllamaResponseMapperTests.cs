@@ -1,4 +1,6 @@
+using Iris.Application.Abstractions.Models.Contracts.Chat;
 using Iris.ModelGateway.Ollama;
+using Iris.Shared.Results;
 
 namespace Iris.Integration.Tests.ModelGateway;
 
@@ -13,7 +15,7 @@ public sealed class OllamaResponseMapperTests
             new OllamaChatMessage("assistant", "hello back"),
             Done: true);
 
-        var result = OllamaResponseMapper.Map(response);
+        Result<ChatModelResponse> result = OllamaResponseMapper.Map(response);
 
         Assert.True(result.IsSuccess);
         Assert.Equal("hello back", result.Value.Content);
@@ -22,7 +24,7 @@ public sealed class OllamaResponseMapperTests
     [Fact]
     public void Map_Fails_WhenResponseIsNull()
     {
-        var result = OllamaResponseMapper.Map(null);
+        Result<ChatModelResponse> result = OllamaResponseMapper.Map(null);
 
         Assert.True(result.IsFailure);
         Assert.Equal("model_gateway.provider_invalid_response", result.Error.Code);
@@ -33,7 +35,7 @@ public sealed class OllamaResponseMapperTests
     {
         var response = new OllamaChatResponse("model", DateTimeOffset.UtcNow, null, Done: true);
 
-        var result = OllamaResponseMapper.Map(response);
+        Result<ChatModelResponse> result = OllamaResponseMapper.Map(response);
 
         Assert.True(result.IsFailure);
         Assert.Equal("model_gateway.provider_invalid_response", result.Error.Code);
@@ -48,7 +50,7 @@ public sealed class OllamaResponseMapperTests
             new OllamaChatMessage("user", "hello"),
             Done: true);
 
-        var result = OllamaResponseMapper.Map(response);
+        Result<ChatModelResponse> result = OllamaResponseMapper.Map(response);
 
         Assert.True(result.IsFailure);
         Assert.Equal("model_gateway.provider_invalid_role", result.Error.Code);
@@ -63,7 +65,7 @@ public sealed class OllamaResponseMapperTests
             new OllamaChatMessage("assistant", " "),
             Done: true);
 
-        var result = OllamaResponseMapper.Map(response);
+        Result<ChatModelResponse> result = OllamaResponseMapper.Map(response);
 
         Assert.True(result.IsFailure);
         Assert.Equal("model_gateway.provider_empty_response", result.Error.Code);

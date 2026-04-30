@@ -1,6 +1,7 @@
 using System.Net.Http.Json;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+
 using Iris.Application.Abstractions.Models.Contracts.Chat;
 using Iris.Application.Abstractions.Models.Interfaces;
 using Iris.ModelGateway.Http;
@@ -10,7 +11,7 @@ namespace Iris.ModelGateway.Ollama;
 
 internal sealed class OllamaChatModelClient : IChatModelClient
 {
-    private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web)
+    private static readonly JsonSerializerOptions _jsonOptions = new(JsonSerializerDefaults.Web)
     {
         DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
     };
@@ -30,13 +31,13 @@ internal sealed class OllamaChatModelClient : IChatModelClient
         ChatModelRequest request,
         CancellationToken cancellationToken)
     {
-        var optionsValidation = _options.Validate();
+        Result optionsValidation = _options.Validate();
         if (optionsValidation.IsFailure)
         {
             return Result<ChatModelResponse>.Failure(optionsValidation.Error);
         }
 
-        var mappedRequest = OllamaRequestMapper.Map(request, _options);
+        Result<OllamaChatRequest> mappedRequest = OllamaRequestMapper.Map(request, _options);
         if (mappedRequest.IsFailure)
         {
             return Result<ChatModelResponse>.Failure(mappedRequest.Error);
@@ -44,10 +45,10 @@ internal sealed class OllamaChatModelClient : IChatModelClient
 
         try
         {
-            using var response = await _httpClient.PostAsJsonAsync(
+            using HttpResponseMessage response = await _httpClient.PostAsJsonAsync(
                 "/api/chat",
                 mappedRequest.Value,
-                JsonOptions,
+                _jsonOptions,
                 cancellationToken);
 
             if (!response.IsSuccessStatusCode)
@@ -56,8 +57,8 @@ internal sealed class OllamaChatModelClient : IChatModelClient
                     ModelGatewayHttpErrorHandler.FromStatusCode(response.StatusCode));
             }
 
-            var ollamaResponse = await response.Content.ReadFromJsonAsync<OllamaChatResponse>(
-                JsonOptions,
+            OllamaChatResponse? ollamaResponse = await response.Content.ReadFromJsonAsync<OllamaChatResponse>(
+                _jsonOptions,
                 cancellationToken);
 
             return OllamaResponseMapper.Map(ollamaResponse);

@@ -1,4 +1,4 @@
-﻿namespace Iris.Tools
+namespace Iris.Tools
 {
     public class DependencyInjection
     {

@@ -1,5 +1,6 @@
 using Iris.Application.Abstractions.Models.Contracts.Chat;
 using Iris.ModelGateway.Ollama;
+using Iris.Shared.Results;
 
 namespace Iris.Integration.Tests.ModelGateway;
 
@@ -16,7 +17,7 @@ public sealed class OllamaRequestMapperTests
             ],
             new ChatModelOptions(Model: "request-model", Temperature: 0.7));
 
-        var result = OllamaRequestMapper.Map(request, CreateOptions(chatModel: "configured-model"));
+        Result<OllamaChatRequest> result = OllamaRequestMapper.Map(request, CreateOptions(chatModel: "configured-model"));
 
         Assert.True(result.IsSuccess);
         Assert.Equal("request-model", result.Value.Model);
@@ -34,7 +35,7 @@ public sealed class OllamaRequestMapperTests
             [new ChatModelMessage(ChatModelRole.User, "hello")],
             new ChatModelOptions());
 
-        var result = OllamaRequestMapper.Map(request, CreateOptions(chatModel: "configured-model"));
+        Result<OllamaChatRequest> result = OllamaRequestMapper.Map(request, CreateOptions(chatModel: "configured-model"));
 
         Assert.True(result.IsSuccess);
         Assert.Equal("configured-model", result.Value.Model);
@@ -47,7 +48,7 @@ public sealed class OllamaRequestMapperTests
             [new ChatModelMessage(ChatModelRole.User, "hello")],
             new ChatModelOptions(Model: "model"));
 
-        var result = OllamaRequestMapper.Map(request, CreateOptions());
+        Result<OllamaChatRequest> result = OllamaRequestMapper.Map(request, CreateOptions());
 
         Assert.True(result.IsSuccess);
         Assert.Null(result.Value.Options);
@@ -58,7 +59,7 @@ public sealed class OllamaRequestMapperTests
     {
         var request = new ChatModelRequest([], new ChatModelOptions(Model: "model"));
 
-        var result = OllamaRequestMapper.Map(request, CreateOptions());
+        Result<OllamaChatRequest> result = OllamaRequestMapper.Map(request, CreateOptions());
 
         Assert.True(result.IsFailure);
         Assert.Equal("model_gateway.request.empty_messages", result.Error.Code);
@@ -71,7 +72,7 @@ public sealed class OllamaRequestMapperTests
             [new ChatModelMessage(ChatModelRole.User, " ")],
             new ChatModelOptions(Model: "model"));
 
-        var result = OllamaRequestMapper.Map(request, CreateOptions());
+        Result<OllamaChatRequest> result = OllamaRequestMapper.Map(request, CreateOptions());
 
         Assert.True(result.IsFailure);
         Assert.Equal("model_gateway.request.empty_message_content", result.Error.Code);
@@ -84,7 +85,7 @@ public sealed class OllamaRequestMapperTests
             [new ChatModelMessage(ChatModelRole.User, "hello")],
             new ChatModelOptions());
 
-        var result = OllamaRequestMapper.Map(request, CreateOptions(chatModel: " "));
+        Result<OllamaChatRequest> result = OllamaRequestMapper.Map(request, CreateOptions(chatModel: " "));
 
         Assert.True(result.IsFailure);
         Assert.Equal("model_gateway.ollama.model_required", result.Error.Code);
@@ -97,7 +98,7 @@ public sealed class OllamaRequestMapperTests
             [new ChatModelMessage((ChatModelRole)999, "hello")],
             new ChatModelOptions(Model: "model"));
 
-        var result = OllamaRequestMapper.Map(request, CreateOptions());
+        Result<OllamaChatRequest> result = OllamaRequestMapper.Map(request, CreateOptions());
 
         Assert.True(result.IsFailure);
         Assert.Equal("model_gateway.request.role_invalid", result.Error.Code);
@@ -115,7 +116,7 @@ public sealed class OllamaRequestMapperTests
             [new ChatModelMessage(ChatModelRole.User, "hello")],
             new ChatModelOptions(Model: "model", Temperature: temperature));
 
-        var result = OllamaRequestMapper.Map(request, CreateOptions());
+        Result<OllamaChatRequest> result = OllamaRequestMapper.Map(request, CreateOptions());
 
         Assert.True(result.IsFailure);
         Assert.Equal("model_gateway.request.temperature_invalid", result.Error.Code);

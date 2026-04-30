@@ -1,7 +1,9 @@
 using Iris.Application.Abstractions.Persistence;
 using Iris.Domain.Conversations;
 using Iris.Persistence.Database;
+using Iris.Persistence.Entities;
 using Iris.Persistence.Mapping;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace Iris.Persistence.Repositories;
@@ -19,7 +21,7 @@ public sealed class ConversationRepository : IConversationRepository
         ConversationId id,
         CancellationToken cancellationToken)
     {
-        var entity = await _dbContext.Conversations
+        ConversationEntity? entity = await _dbContext.Conversations
             .AsNoTracking()
             .FirstOrDefaultAsync(
                 conversation => conversation.Id == id.Value,
@@ -32,7 +34,7 @@ public sealed class ConversationRepository : IConversationRepository
         Conversation conversation,
         CancellationToken cancellationToken)
     {
-        var entity = ConversationMapper.ToEntity(conversation);
+        ConversationEntity entity = ConversationMapper.ToEntity(conversation);
         await _dbContext.Conversations.AddAsync(entity, cancellationToken);
     }
 
@@ -40,7 +42,7 @@ public sealed class ConversationRepository : IConversationRepository
         Conversation conversation,
         CancellationToken cancellationToken)
     {
-        var entity = await _dbContext.Conversations
+        ConversationEntity? entity = await _dbContext.Conversations
             .FirstOrDefaultAsync(
                 storedConversation => storedConversation.Id == conversation.Id.Value,
                 cancellationToken);

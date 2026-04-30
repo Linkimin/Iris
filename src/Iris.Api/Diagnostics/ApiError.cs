@@ -1,4 +1,4 @@
-﻿namespace Iris.Api.Diagnostics
+namespace Iris.Api.Diagnostics
 {
     public class ApiError
     {

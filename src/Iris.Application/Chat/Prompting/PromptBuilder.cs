@@ -6,14 +6,14 @@ namespace Iris.Application.Chat.Prompting;
 
 public sealed class PromptBuilder
 {
-    private const string BaselineSystemPrompt =
+    private const string _baselineSystemPrompt =
         "You are Iris, a local personal AI companion. Be helpful, clear, and respectful.";
 
     public Result<PromptBuildResult> Build(PromptBuildRequest request)
     {
         var messages = new List<ChatModelMessage>
         {
-            new(ChatModelRole.System, BaselineSystemPrompt)
+            new(ChatModelRole.System, _baselineSystemPrompt)
         };
 
         messages.AddRange(request.RecentMessages.Select(MapHistoryMessage));
@@ -26,7 +26,7 @@ public sealed class PromptBuilder
 
     private static ChatModelMessage MapHistoryMessage(Message message)
     {
-        var role = message.Role switch
+        ChatModelRole role = message.Role switch
         {
             MessageRole.System => ChatModelRole.System,
             MessageRole.User => ChatModelRole.User,

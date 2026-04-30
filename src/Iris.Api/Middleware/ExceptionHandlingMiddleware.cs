@@ -1,4 +1,4 @@
-﻿namespace Iris.Api.Middleware
+namespace Iris.Api.Middleware
 {
     public class ExceptionHandlingMiddleware
     {

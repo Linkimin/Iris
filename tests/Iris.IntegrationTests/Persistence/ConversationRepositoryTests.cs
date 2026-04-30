@@ -1,4 +1,5 @@
 using Iris.Domain.Conversations;
+using Iris.Persistence.Database;
 using Iris.Persistence.Repositories;
 using Iris.Persistence.UnitOfWork;
 
@@ -11,7 +12,7 @@ public sealed class ConversationRepositoryTests
     {
         await using var factory = new PersistenceTestContextFactory();
         var createdAt = new DateTimeOffset(2026, 4, 27, 10, 0, 0, TimeSpan.Zero);
-        var updatedAt = createdAt.AddMinutes(3);
+        DateTimeOffset updatedAt = createdAt.AddMinutes(3);
         var conversation = Conversation.Create(
             ConversationId.New(),
             ConversationTitle.Create("Phase 3 chat"),
@@ -19,7 +20,7 @@ public sealed class ConversationRepositoryTests
             createdAt);
         conversation.Touch(updatedAt);
 
-        await using (var writeContext = await factory.CreateInitializedContextAsync())
+        await using (IrisDbContext writeContext = await factory.CreateInitializedContextAsync())
         {
             var repository = new ConversationRepository(writeContext);
             var unitOfWork = new EfUnitOfWork(writeContext);
@@ -28,10 +29,10 @@ public sealed class ConversationRepositoryTests
             await unitOfWork.CommitAsync(CancellationToken.None);
         }
 
-        await using var readContext = factory.CreateContext();
+        await using IrisDbContext readContext = factory.CreateContext();
         var readRepository = new ConversationRepository(readContext);
 
-        var persisted = await readRepository.GetByIdAsync(conversation.Id, CancellationToken.None);
+        Conversation? persisted = await readRepository.GetByIdAsync(conversation.Id, CancellationToken.None);
 
         Assert.NotNull(persisted);
         Assert.Equal(conversation.Id, persisted.Id);
@@ -46,8 +47,8 @@ public sealed class ConversationRepositoryTests
     public async Task AddAndGetByIdAsync_PreservesUtcTicksForNonZeroOffsetTimestamps()
     {
         await using var factory = new PersistenceTestContextFactory();
-        var createdAt = new DateTimeOffset(2026, 4, 27, 10, 0, 0, TimeSpan.FromHours(5)).AddTicks(1_234);
-        var updatedAt = createdAt.AddTicks(5_678);
+        DateTimeOffset createdAt = new DateTimeOffset(2026, 4, 27, 10, 0, 0, TimeSpan.FromHours(5)).AddTicks(1_234);
+        DateTimeOffset updatedAt = createdAt.AddTicks(5_678);
         var conversation = Conversation.Create(
             ConversationId.New(),
             null,
@@ -55,7 +56,7 @@ public sealed class ConversationRepositoryTests
             createdAt);
         conversation.Touch(updatedAt);
 
-        await using (var writeContext = await factory.CreateInitializedContextAsync())
+        await using (IrisDbContext writeContext = await factory.CreateInitializedContextAsync())
         {
             var repository = new ConversationRepository(writeContext);
             var unitOfWork = new EfUnitOfWork(writeContext);
@@ -64,10 +65,10 @@ public sealed class ConversationRepositoryTests
             await unitOfWork.CommitAsync(CancellationToken.None);
         }
 
-        await using var readContext = factory.CreateContext();
+        await using IrisDbContext readContext = factory.CreateContext();
         var readRepository = new ConversationRepository(readContext);
 
-        var persisted = await readRepository.GetByIdAsync(conversation.Id, CancellationToken.None);
+        Conversation? persisted = await readRepository.GetByIdAsync(conversation.Id, CancellationToken.None);
 
         Assert.NotNull(persisted);
         Assert.Equal(TimeSpan.Zero, persisted.CreatedAt.Offset);
@@ -81,14 +82,14 @@ public sealed class ConversationRepositoryTests
     {
         await using var factory = new PersistenceTestContextFactory();
         var createdAt = new DateTimeOffset(2026, 4, 27, 10, 0, 0, TimeSpan.Zero);
-        var updatedAt = createdAt.AddMinutes(4);
+        DateTimeOffset updatedAt = createdAt.AddMinutes(4);
         var conversation = Conversation.Create(
             ConversationId.New(),
             ConversationTitle.Create("Original title"),
             ConversationMode.Default,
             createdAt);
 
-        await using (var writeContext = await factory.CreateInitializedContextAsync())
+        await using (IrisDbContext writeContext = await factory.CreateInitializedContextAsync())
         {
             var repository = new ConversationRepository(writeContext);
             var unitOfWork = new EfUnitOfWork(writeContext);
@@ -99,7 +100,7 @@ public sealed class ConversationRepositoryTests
 
         conversation.UpdateTitle(ConversationTitle.Create("Updated title"), updatedAt);
 
-        await using (var updateContext = factory.CreateContext())
+        await using (IrisDbContext updateContext = factory.CreateContext())
         {
             var repository = new ConversationRepository(updateContext);
             var unitOfWork = new EfUnitOfWork(updateContext);
@@ -108,10 +109,10 @@ public sealed class ConversationRepositoryTests
             await unitOfWork.CommitAsync(CancellationToken.None);
         }
 
-        await using var readContext = factory.CreateContext();
+        await using IrisDbContext readContext = factory.CreateContext();
         var readRepository = new ConversationRepository(readContext);
 
-        var persisted = await readRepository.GetByIdAsync(conversation.Id, CancellationToken.None);
+        Conversation? persisted = await readRepository.GetByIdAsync(conversation.Id, CancellationToken.None);
 
         Assert.NotNull(persisted);
         Assert.Equal("Updated title", persisted.Title!.Value);
@@ -123,10 +124,10 @@ public sealed class ConversationRepositoryTests
     {
         await using var factory = new PersistenceTestContextFactory();
 
-        await using var context = await factory.CreateInitializedContextAsync();
+        await using IrisDbContext context = await factory.CreateInitializedContextAsync();
         var repository = new ConversationRepository(context);
 
-        var result = await repository.GetByIdAsync(ConversationId.New(), CancellationToken.None);
+        Conversation? result = await repository.GetByIdAsync(ConversationId.New(), CancellationToken.None);
 
         Assert.Null(result);
     }

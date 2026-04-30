@@ -1,4 +1,4 @@
-﻿namespace Iris.Api.Endpoints
+namespace Iris.Api.Endpoints
 {
     public class PersonaEndpoints
     {

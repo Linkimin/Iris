@@ -29,7 +29,7 @@ public sealed class ConversationTests
     {
         var createdAt = new DateTimeOffset(2026, 4, 26, 10, 0, 0, TimeSpan.Zero);
 
-        var exception = Assert.Throws<DomainException>(() =>
+        DomainException exception = Assert.Throws<DomainException>(() =>
             Conversation.Create(ConversationId.New(), null, mode, createdAt));
 
         Assert.Equal("conversation.invalid_mode", exception.Code);
@@ -40,7 +40,7 @@ public sealed class ConversationTests
     {
         var id = ConversationId.New();
         var createdAt = new DateTimeOffset(2026, 4, 27, 10, 0, 0, TimeSpan.Zero);
-        var updatedAt = createdAt.AddMinutes(5);
+        DateTimeOffset updatedAt = createdAt.AddMinutes(5);
         var title = ConversationTitle.Create("Saved chat");
 
         var conversation = Conversation.Rehydrate(
@@ -66,7 +66,7 @@ public sealed class ConversationTests
     {
         var createdAt = new DateTimeOffset(2026, 4, 27, 10, 0, 0, TimeSpan.Zero);
 
-        var exception = Assert.Throws<DomainException>(() => Conversation.Rehydrate(
+        DomainException exception = Assert.Throws<DomainException>(() => Conversation.Rehydrate(
             ConversationId.New(),
             null,
             (ConversationStatus)status,
@@ -84,7 +84,7 @@ public sealed class ConversationTests
     {
         var createdAt = new DateTimeOffset(2026, 4, 27, 10, 0, 0, TimeSpan.Zero);
 
-        var exception = Assert.Throws<DomainException>(() => Conversation.Rehydrate(
+        DomainException exception = Assert.Throws<DomainException>(() => Conversation.Rehydrate(
             ConversationId.New(),
             null,
             ConversationStatus.Active,
@@ -100,7 +100,7 @@ public sealed class ConversationTests
     {
         var createdAt = new DateTimeOffset(2026, 4, 27, 10, 0, 0, TimeSpan.Zero);
 
-        var exception = Assert.Throws<DomainException>(() => Conversation.Rehydrate(
+        DomainException exception = Assert.Throws<DomainException>(() => Conversation.Rehydrate(
             ConversationId.New(),
             null,
             ConversationStatus.Active,
@@ -115,7 +115,7 @@ public sealed class ConversationTests
     public void UpdateTitle_ChangesTitleAndUpdatedAt()
     {
         var createdAt = new DateTimeOffset(2026, 4, 26, 10, 0, 0, TimeSpan.Zero);
-        var updatedAt = createdAt.AddMinutes(5);
+        DateTimeOffset updatedAt = createdAt.AddMinutes(5);
         var conversation = Conversation.Create(ConversationId.New(), null, ConversationMode.Default, createdAt);
 
         conversation.UpdateTitle(ConversationTitle.Create("New title"), updatedAt);
@@ -128,7 +128,7 @@ public sealed class ConversationTests
     public void Touch_UpdatesUpdatedAt()
     {
         var createdAt = new DateTimeOffset(2026, 4, 26, 10, 0, 0, TimeSpan.Zero);
-        var touchedAt = createdAt.AddMinutes(1);
+        DateTimeOffset touchedAt = createdAt.AddMinutes(1);
         var conversation = Conversation.Create(ConversationId.New(), null, ConversationMode.Default, createdAt);
 
         conversation.Touch(touchedAt);
@@ -142,7 +142,7 @@ public sealed class ConversationTests
         var createdAt = new DateTimeOffset(2026, 4, 26, 10, 0, 0, TimeSpan.Zero);
         var conversation = Conversation.Create(ConversationId.New(), null, ConversationMode.Default, createdAt);
 
-        var exception = Assert.Throws<DomainException>(() =>
+        DomainException exception = Assert.Throws<DomainException>(() =>
             conversation.Touch(createdAt.AddTicks(-1)));
 
         Assert.Equal("conversation.invalid_updated_at", exception.Code);
@@ -154,7 +154,7 @@ public sealed class ConversationTests
         var createdAt = new DateTimeOffset(2026, 4, 26, 10, 0, 0, TimeSpan.Zero);
         var conversation = Conversation.Create(ConversationId.New(), null, ConversationMode.Default, createdAt);
 
-        var exception = Assert.Throws<DomainException>(() =>
+        DomainException exception = Assert.Throws<DomainException>(() =>
             conversation.UpdateTitle(ConversationTitle.Create("New title"), createdAt.AddTicks(-1)));
 
         Assert.Equal("conversation.invalid_updated_at", exception.Code);
@@ -166,7 +166,7 @@ public sealed class ConversationTests
         var createdAt = new DateTimeOffset(2026, 4, 26, 10, 0, 0, TimeSpan.Zero);
         var conversation = Conversation.Create(ConversationId.New(), null, ConversationMode.Default, createdAt);
 
-        var exception = Assert.Throws<DomainException>(() =>
+        DomainException exception = Assert.Throws<DomainException>(() =>
             conversation.Archive(createdAt.AddTicks(-1)));
 
         Assert.Equal("conversation.invalid_updated_at", exception.Code);
@@ -178,7 +178,7 @@ public sealed class ConversationTests
         var createdAt = new DateTimeOffset(2026, 4, 26, 10, 0, 0, TimeSpan.Zero);
         var conversation = Conversation.Create(ConversationId.New(), null, ConversationMode.Default, createdAt);
 
-        var exception = Assert.Throws<DomainException>(() =>
+        DomainException exception = Assert.Throws<DomainException>(() =>
             conversation.Close(createdAt.AddTicks(-1)));
 
         Assert.Equal("conversation.invalid_updated_at", exception.Code);

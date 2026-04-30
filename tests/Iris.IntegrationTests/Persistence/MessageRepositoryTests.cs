@@ -1,4 +1,5 @@
 using Iris.Domain.Conversations;
+using Iris.Persistence.Database;
 using Iris.Persistence.Repositories;
 using Iris.Persistence.UnitOfWork;
 
@@ -31,7 +32,7 @@ public sealed class MessageRepositoryTests
             MessageMetadata.Empty,
             createdAt.AddMinutes(1));
 
-        await using (var writeContext = await factory.CreateInitializedContextAsync())
+        await using (IrisDbContext writeContext = await factory.CreateInitializedContextAsync())
         {
             var conversationRepository = new ConversationRepository(writeContext);
             var messageRepository = new MessageRepository(writeContext);
@@ -43,10 +44,10 @@ public sealed class MessageRepositoryTests
             await unitOfWork.CommitAsync(CancellationToken.None);
         }
 
-        await using var readContext = factory.CreateContext();
+        await using IrisDbContext readContext = factory.CreateContext();
         var readRepository = new MessageRepository(readContext);
 
-        var messages = await readRepository.ListRecentAsync(
+        IReadOnlyList<Message> messages = await readRepository.ListRecentAsync(
             conversation.Id,
             limit: 10,
             CancellationToken.None);
@@ -72,7 +73,7 @@ public sealed class MessageRepositoryTests
     {
         await using var factory = new PersistenceTestContextFactory();
         var conversationCreatedAt = new DateTimeOffset(2026, 4, 27, 10, 0, 0, TimeSpan.Zero);
-        var messageCreatedAt = new DateTimeOffset(2026, 4, 27, 10, 0, 0, TimeSpan.FromHours(5)).AddTicks(9_876);
+        DateTimeOffset messageCreatedAt = new DateTimeOffset(2026, 4, 27, 10, 0, 0, TimeSpan.FromHours(5)).AddTicks(9_876);
         var conversation = Conversation.Create(
             ConversationId.New(),
             null,
@@ -86,7 +87,7 @@ public sealed class MessageRepositoryTests
             MessageMetadata.Empty,
             messageCreatedAt);
 
-        await using (var writeContext = await factory.CreateInitializedContextAsync())
+        await using (IrisDbContext writeContext = await factory.CreateInitializedContextAsync())
         {
             var conversationRepository = new ConversationRepository(writeContext);
             var messageRepository = new MessageRepository(writeContext);
@@ -97,12 +98,12 @@ public sealed class MessageRepositoryTests
             await unitOfWork.CommitAsync(CancellationToken.None);
         }
 
-        await using var readContext = factory.CreateContext();
+        await using IrisDbContext readContext = factory.CreateContext();
         var readRepository = new MessageRepository(readContext);
 
-        var messages = await readRepository.ListRecentAsync(conversation.Id, limit: 10, CancellationToken.None);
+        IReadOnlyList<Message> messages = await readRepository.ListRecentAsync(conversation.Id, limit: 10, CancellationToken.None);
 
-        var persisted = Assert.Single(messages);
+        Message persisted = Assert.Single(messages);
         Assert.Equal(TimeSpan.Zero, persisted.CreatedAt.Offset);
         Assert.Equal(messageCreatedAt.UtcTicks, persisted.CreatedAt.UtcTicks);
     }
@@ -111,10 +112,10 @@ public sealed class MessageRepositoryTests
     public async Task ListRecentAsync_WithIdenticalCreatedAt_ReturnsInsertionOrder()
     {
         await using var factory = new PersistenceTestContextFactory();
-        var createdAt = new DateTimeOffset(2026, 4, 27, 10, 0, 0, TimeSpan.Zero).AddTicks(321);
+        DateTimeOffset createdAt = new DateTimeOffset(2026, 4, 27, 10, 0, 0, TimeSpan.Zero).AddTicks(321);
         var conversation = Conversation.Create(ConversationId.New(), null, ConversationMode.Default, createdAt);
 
-        await using (var writeContext = await factory.CreateInitializedContextAsync())
+        await using (IrisDbContext writeContext = await factory.CreateInitializedContextAsync())
         {
             var conversationRepository = new ConversationRepository(writeContext);
             var messageRepository = new MessageRepository(writeContext);
@@ -138,10 +139,10 @@ public sealed class MessageRepositoryTests
             await unitOfWork.CommitAsync(CancellationToken.None);
         }
 
-        await using var readContext = factory.CreateContext();
+        await using IrisDbContext readContext = factory.CreateContext();
         var readRepository = new MessageRepository(readContext);
 
-        var messages = await readRepository.ListRecentAsync(conversation.Id, limit: 10, CancellationToken.None);
+        IReadOnlyList<Message> messages = await readRepository.ListRecentAsync(conversation.Id, limit: 10, CancellationToken.None);
 
         Assert.Collection(
             messages,
@@ -157,7 +158,7 @@ public sealed class MessageRepositoryTests
         var createdAt = new DateTimeOffset(2026, 4, 27, 10, 0, 0, TimeSpan.Zero);
         var conversation = Conversation.Create(ConversationId.New(), null, ConversationMode.Default, createdAt);
 
-        await using (var writeContext = await factory.CreateInitializedContextAsync())
+        await using (IrisDbContext writeContext = await factory.CreateInitializedContextAsync())
         {
             var conversationRepository = new ConversationRepository(writeContext);
             var messageRepository = new MessageRepository(writeContext);
@@ -181,10 +182,10 @@ public sealed class MessageRepositoryTests
             await unitOfWork.CommitAsync(CancellationToken.None);
         }
 
-        await using var readContext = factory.CreateContext();
+        await using IrisDbContext readContext = factory.CreateContext();
         var readRepository = new MessageRepository(readContext);
 
-        var messages = await readRepository.ListRecentAsync(
+        IReadOnlyList<Message> messages = await readRepository.ListRecentAsync(
             conversation.Id,
             limit: 2,
             CancellationToken.None);
@@ -204,7 +205,7 @@ public sealed class MessageRepositoryTests
         var createdAt = new DateTimeOffset(2026, 4, 27, 10, 0, 0, TimeSpan.Zero);
         var conversation = Conversation.Create(ConversationId.New(), null, ConversationMode.Default, createdAt);
 
-        await using (var writeContext = await factory.CreateInitializedContextAsync())
+        await using (IrisDbContext writeContext = await factory.CreateInitializedContextAsync())
         {
             var conversationRepository = new ConversationRepository(writeContext);
             var messageRepository = new MessageRepository(writeContext);
@@ -222,10 +223,10 @@ public sealed class MessageRepositoryTests
             await unitOfWork.CommitAsync(CancellationToken.None);
         }
 
-        await using var readContext = factory.CreateContext();
+        await using IrisDbContext readContext = factory.CreateContext();
         var readRepository = new MessageRepository(readContext);
 
-        var messages = await readRepository.ListRecentAsync(conversation.Id, limit, CancellationToken.None);
+        IReadOnlyList<Message> messages = await readRepository.ListRecentAsync(conversation.Id, limit, CancellationToken.None);
 
         Assert.Empty(messages);
     }

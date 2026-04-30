@@ -1,4 +1,4 @@
-﻿namespace Iris.Api.Contracts.Common
+namespace Iris.Api.Contracts.Common
 {
     public class ApiResponse
     {

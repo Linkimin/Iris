@@ -19,7 +19,7 @@ public sealed class OllamaModelClientOptions
                 "Ollama base URL is required."));
         }
 
-        if (!Uri.TryCreate(BaseUrl, UriKind.Absolute, out var baseUri))
+        if (!Uri.TryCreate(BaseUrl, UriKind.Absolute, out Uri? baseUri))
         {
             return Result.Failure(Error.Validation(
                 "model_gateway.ollama.base_url_invalid",

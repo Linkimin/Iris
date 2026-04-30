@@ -1,4 +1,4 @@
-﻿namespace Iris.Api.Contracts.Sessions
+namespace Iris.Api.Contracts.Sessions
 {
     public class StartSessionHttpRequest
     {

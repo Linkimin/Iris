@@ -1,4 +1,5 @@
 using System.Net;
+
 using Iris.Shared.Results;
 
 namespace Iris.ModelGateway.Http;

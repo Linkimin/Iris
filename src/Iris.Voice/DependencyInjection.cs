@@ -1,4 +1,4 @@
-﻿namespace Iris.Voice
+namespace Iris.Voice
 {
     public class DependencyInjection
     {
