@@ -1,5 +1,6 @@
 using Iris.Persistence;
 using Iris.Persistence.Database;
+
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,13 +19,13 @@ public sealed class IrisDatabaseInitializerTests
 
         try
         {
-            await using (var provider = CreateProvider(connectionString))
-            await using (var scope = provider.CreateAsyncScope())
+            await using (ServiceProvider provider = CreateProvider(connectionString))
+            await using (AsyncServiceScope scope = provider.CreateAsyncScope())
             {
-                var initializer = scope.ServiceProvider.GetRequiredService<IIrisDatabaseInitializer>();
+                IIrisDatabaseInitializer initializer = scope.ServiceProvider.GetRequiredService<IIrisDatabaseInitializer>();
                 await initializer.InitializeAsync(CancellationToken.None);
 
-                var dbContext = scope.ServiceProvider.GetRequiredService<IrisDbContext>();
+                IrisDbContext dbContext = scope.ServiceProvider.GetRequiredService<IrisDbContext>();
 
                 Assert.True(await dbContext.Database.CanConnectAsync());
                 Assert.True(File.Exists(databasePath));

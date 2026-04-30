@@ -1,4 +1,4 @@
-﻿namespace Iris.Api.DependencyInjection
+namespace Iris.Api.DependencyInjection
 {
     public class ApiServiceCollectionExtensions
     {

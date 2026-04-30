@@ -1,6 +1,7 @@
 using Iris.Application.Abstractions.Models.Contracts.Chat;
 using Iris.Application.Chat.Prompting;
 using Iris.Domain.Conversations;
+using Iris.Shared.Results;
 
 namespace Iris.Application.Tests.Chat.Prompting;
 
@@ -12,7 +13,7 @@ public sealed class PromptBuilderTests
         var builder = new PromptBuilder();
         var conversationId = ConversationId.New();
         var createdAt = new DateTimeOffset(2026, 4, 26, 10, 0, 0, TimeSpan.Zero);
-        var history = new[]
+        Message[] history = new[]
         {
             Message.Create(
                 MessageId.New(),
@@ -30,7 +31,7 @@ public sealed class PromptBuilderTests
                 createdAt.AddSeconds(1))
         };
 
-        var result = builder.Build(new PromptBuildRequest(
+        Result<PromptBuildResult> result = builder.Build(new PromptBuildRequest(
             history,
             MessageContent.Create("Current user")));
 

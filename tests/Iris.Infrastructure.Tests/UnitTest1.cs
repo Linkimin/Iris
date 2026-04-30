@@ -1,4 +1,4 @@
-﻿namespace Iris.Infrastructure.Tests
+namespace Iris.Infrastructure.Tests
 {
     public class UnitTest1
     {

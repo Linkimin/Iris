@@ -19,9 +19,9 @@ public sealed class SendMessageHandlerTests
         var messages = new FakeMessageRepository();
         var unitOfWork = new FakeUnitOfWork();
         var model = new FakeChatModelClient(Result<ChatModelResponse>.Success(new ChatModelResponse("Assistant reply")));
-        var handler = CreateHandler(conversations, messages, unitOfWork, model, clock);
+        SendMessageHandler handler = CreateHandler(conversations, messages, unitOfWork, model, clock);
 
-        var result = await handler.HandleAsync(new SendMessageCommand(null, " Hello "), CancellationToken.None);
+        Result<SendMessageResult> result = await handler.HandleAsync(new SendMessageCommand(null, " Hello "), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.Equal(" Hello ", result.Value.UserMessage.Content);
@@ -42,9 +42,9 @@ public sealed class SendMessageHandlerTests
         var messages = new FakeMessageRepository();
         var unitOfWork = new FakeUnitOfWork();
         var model = new FakeChatModelClient(Result<ChatModelResponse>.Success(new ChatModelResponse("Assistant reply")));
-        var handler = CreateHandler(conversations, messages, unitOfWork, model, clock);
+        SendMessageHandler handler = CreateHandler(conversations, messages, unitOfWork, model, clock);
 
-        var result = await handler.HandleAsync(new SendMessageCommand(conversation.Id, "Hello"), CancellationToken.None);
+        Result<SendMessageResult> result = await handler.HandleAsync(new SendMessageCommand(conversation.Id, "Hello"), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.Equal(conversation.Id, result.Value.ConversationId);
@@ -56,7 +56,7 @@ public sealed class SendMessageHandlerTests
     public async Task HandleAsync_WithExistingConversation_UpdatesTouchedConversation()
     {
         var initialTime = new DateTimeOffset(2026, 4, 26, 10, 0, 0, TimeSpan.Zero);
-        var touchedTime = initialTime.AddMinutes(5);
+        DateTimeOffset touchedTime = initialTime.AddMinutes(5);
         var clock = new FakeClock(initialTime, touchedTime);
         var conversation = Conversation.Create(ConversationId.New(), null, ConversationMode.Default, initialTime);
         var conversations = new FakeConversationRepository();
@@ -64,9 +64,9 @@ public sealed class SendMessageHandlerTests
         var messages = new FakeMessageRepository();
         var unitOfWork = new FakeUnitOfWork();
         var model = new FakeChatModelClient(Result<ChatModelResponse>.Success(new ChatModelResponse("Assistant reply")));
-        var handler = CreateHandler(conversations, messages, unitOfWork, model, clock);
+        SendMessageHandler handler = CreateHandler(conversations, messages, unitOfWork, model, clock);
 
-        var result = await handler.HandleAsync(new SendMessageCommand(conversation.Id, "Hello"), CancellationToken.None);
+        Result<SendMessageResult> result = await handler.HandleAsync(new SendMessageCommand(conversation.Id, "Hello"), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.Empty(conversations.Added);
@@ -89,9 +89,9 @@ public sealed class SendMessageHandlerTests
         var messages = new FakeMessageRepository();
         var unitOfWork = new FakeUnitOfWork();
         var model = new FakeChatModelClient(Result<ChatModelResponse>.Success(new ChatModelResponse("Assistant reply")));
-        var handler = CreateHandler(conversations, messages, unitOfWork, model, clock);
+        SendMessageHandler handler = CreateHandler(conversations, messages, unitOfWork, model, clock);
 
-        var result = await handler.HandleAsync(new SendMessageCommand(conversation.Id, "Hello"), CancellationToken.None);
+        Result<SendMessageResult> result = await handler.HandleAsync(new SendMessageCommand(conversation.Id, "Hello"), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("chat.message_save_failed", result.Error.Code);
@@ -111,9 +111,9 @@ public sealed class SendMessageHandlerTests
         var messages = new FakeMessageRepository();
         var unitOfWork = new FakeUnitOfWork();
         var model = new FakeChatModelClient(Result<ChatModelResponse>.Success(new ChatModelResponse("Assistant reply")));
-        var handler = CreateHandler(conversations, messages, unitOfWork, model, clock);
+        SendMessageHandler handler = CreateHandler(conversations, messages, unitOfWork, model, clock);
 
-        var result = await handler.HandleAsync(new SendMessageCommand(ConversationId.New(), "Hello"), CancellationToken.None);
+        Result<SendMessageResult> result = await handler.HandleAsync(new SendMessageCommand(ConversationId.New(), "Hello"), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("chat.conversation_load_failed", result.Error.Code);
@@ -130,9 +130,9 @@ public sealed class SendMessageHandlerTests
         var messages = new FakeMessageRepository();
         var unitOfWork = new FakeUnitOfWork();
         var model = new FakeChatModelClient(Result<ChatModelResponse>.Success(new ChatModelResponse("Assistant reply")));
-        var handler = CreateHandler(conversations, messages, unitOfWork, model, clock);
+        SendMessageHandler handler = CreateHandler(conversations, messages, unitOfWork, model, clock);
 
-        var result = await handler.HandleAsync(new SendMessageCommand(ConversationId.New(), "Hello"), CancellationToken.None);
+        Result<SendMessageResult> result = await handler.HandleAsync(new SendMessageCommand(ConversationId.New(), "Hello"), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("chat.conversation_not_found", result.Error.Code);
@@ -152,9 +152,9 @@ public sealed class SendMessageHandlerTests
         };
         var unitOfWork = new FakeUnitOfWork();
         var model = new FakeChatModelClient(Result<ChatModelResponse>.Success(new ChatModelResponse("Assistant reply")));
-        var handler = CreateHandler(conversations, messages, unitOfWork, model, clock);
+        SendMessageHandler handler = CreateHandler(conversations, messages, unitOfWork, model, clock);
 
-        var result = await handler.HandleAsync(new SendMessageCommand(null, "Hello"), CancellationToken.None);
+        Result<SendMessageResult> result = await handler.HandleAsync(new SendMessageCommand(null, "Hello"), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("chat.history_load_failed", result.Error.Code);
@@ -188,9 +188,9 @@ public sealed class SendMessageHandlerTests
             clock.UtcNow.AddMinutes(1)));
         var unitOfWork = new FakeUnitOfWork();
         var model = new FakeChatModelClient(Result<ChatModelResponse>.Success(new ChatModelResponse("Assistant reply")));
-        var handler = CreateHandler(conversations, messages, unitOfWork, model, clock);
+        SendMessageHandler handler = CreateHandler(conversations, messages, unitOfWork, model, clock);
 
-        var result = await handler.HandleAsync(new SendMessageCommand(conversation.Id, "Current user"), CancellationToken.None);
+        Result<SendMessageResult> result = await handler.HandleAsync(new SendMessageCommand(conversation.Id, "Current user"), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.NotNull(model.LastRequest);
@@ -212,9 +212,9 @@ public sealed class SendMessageHandlerTests
         var model = new FakeChatModelClient(Result<ChatModelResponse>.Failure(Error.Failure(
             "model.unavailable",
             "Local model is unavailable.")));
-        var handler = CreateHandler(conversations, messages, unitOfWork, model, clock);
+        SendMessageHandler handler = CreateHandler(conversations, messages, unitOfWork, model, clock);
 
-        var result = await handler.HandleAsync(new SendMessageCommand(null, "Hello"), CancellationToken.None);
+        Result<SendMessageResult> result = await handler.HandleAsync(new SendMessageCommand(null, "Hello"), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("model.unavailable", result.Error.Code);
@@ -231,9 +231,9 @@ public sealed class SendMessageHandlerTests
         var messages = new FakeMessageRepository();
         var unitOfWork = new FakeUnitOfWork();
         var model = new FakeChatModelClient(Result<ChatModelResponse>.Success(new ChatModelResponse(" ")));
-        var handler = CreateHandler(conversations, messages, unitOfWork, model, clock);
+        SendMessageHandler handler = CreateHandler(conversations, messages, unitOfWork, model, clock);
 
-        var result = await handler.HandleAsync(new SendMessageCommand(null, "Hello"), CancellationToken.None);
+        Result<SendMessageResult> result = await handler.HandleAsync(new SendMessageCommand(null, "Hello"), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("model.empty_response", result.Error.Code);
@@ -253,9 +253,9 @@ public sealed class SendMessageHandlerTests
         };
         var unitOfWork = new FakeUnitOfWork();
         var model = new FakeChatModelClient(Result<ChatModelResponse>.Success(new ChatModelResponse("Assistant reply")));
-        var handler = CreateHandler(conversations, messages, unitOfWork, model, clock);
+        SendMessageHandler handler = CreateHandler(conversations, messages, unitOfWork, model, clock);
 
-        var result = await handler.HandleAsync(new SendMessageCommand(null, "Hello"), CancellationToken.None);
+        Result<SendMessageResult> result = await handler.HandleAsync(new SendMessageCommand(null, "Hello"), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("chat.message_save_failed", result.Error.Code);
@@ -273,9 +273,9 @@ public sealed class SendMessageHandlerTests
             CommitException = new InvalidOperationException("Commit failed.")
         };
         var model = new FakeChatModelClient(Result<ChatModelResponse>.Success(new ChatModelResponse("Assistant reply")));
-        var handler = CreateHandler(conversations, messages, unitOfWork, model, clock);
+        SendMessageHandler handler = CreateHandler(conversations, messages, unitOfWork, model, clock);
 
-        var result = await handler.HandleAsync(new SendMessageCommand(null, "Hello"), CancellationToken.None);
+        Result<SendMessageResult> result = await handler.HandleAsync(new SendMessageCommand(null, "Hello"), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("chat.commit_failed", result.Error.Code);
@@ -294,9 +294,9 @@ public sealed class SendMessageHandlerTests
         var model = new FakeChatModelClient(Result<ChatModelResponse>.Failure(Error.Failure(
             "model.unavailable",
             "Local model is unavailable.")));
-        var handler = CreateHandler(conversations, messages, unitOfWork, model, clock);
+        SendMessageHandler handler = CreateHandler(conversations, messages, unitOfWork, model, clock);
 
-        var result = await handler.HandleAsync(new SendMessageCommand(conversation.Id, "Hello"), CancellationToken.None);
+        Result<SendMessageResult> result = await handler.HandleAsync(new SendMessageCommand(conversation.Id, "Hello"), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("model.unavailable", result.Error.Code);
@@ -376,7 +376,7 @@ public sealed class SendMessageHandlerTests
             }
 
             GetCalls++;
-            Stored.TryGetValue(id, out var conversation);
+            Stored.TryGetValue(id, out Conversation? conversation);
             return Task.FromResult(conversation);
         }
 

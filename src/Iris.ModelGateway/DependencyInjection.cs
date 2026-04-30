@@ -1,6 +1,8 @@
 using Iris.Application.Abstractions.Models.Interfaces;
 using Iris.ModelGateway.Http;
 using Iris.ModelGateway.Ollama;
+using Iris.Shared.Results;
+
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Iris.ModelGateway;
@@ -17,7 +19,7 @@ public static class DependencyInjection
         var options = new OllamaModelClientOptions();
         configureOllama(options);
 
-        var validation = options.Validate();
+        Result validation = options.Validate();
         if (validation.IsFailure)
         {
             throw new InvalidOperationException(validation.Error.Message);
@@ -28,7 +30,7 @@ public static class DependencyInjection
             ModelGatewayHttpClientNames.Ollama,
             (serviceProvider, httpClient) =>
             {
-                var ollamaOptions = serviceProvider.GetRequiredService<OllamaModelClientOptions>();
+                OllamaModelClientOptions ollamaOptions = serviceProvider.GetRequiredService<OllamaModelClientOptions>();
                 httpClient.BaseAddress = new Uri(ollamaOptions.BaseUrl, UriKind.Absolute);
                 httpClient.Timeout = ollamaOptions.Timeout;
             });

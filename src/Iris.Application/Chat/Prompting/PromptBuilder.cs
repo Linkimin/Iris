@@ -26,7 +26,7 @@ public sealed class PromptBuilder
 
     private static ChatModelMessage MapHistoryMessage(Message message)
     {
-        var role = message.Role switch
+        ChatModelRole role = message.Role switch
         {
             MessageRole.System => ChatModelRole.System,
             MessageRole.User => ChatModelRole.User,

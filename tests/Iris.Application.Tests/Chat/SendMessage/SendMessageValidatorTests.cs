@@ -1,4 +1,5 @@
 using Iris.Application.Chat.SendMessage;
+using Iris.Shared.Results;
 
 namespace Iris.Application.Tests.Chat.SendMessage;
 
@@ -11,7 +12,7 @@ public sealed class SendMessageValidatorTests
     {
         var validator = new SendMessageValidator(new SendMessageOptions(MaxMessageLength: 10));
 
-        var result = validator.Validate(new SendMessageCommand(null, message));
+        Result result = validator.Validate(new SendMessageCommand(null, message));
 
         Assert.True(result.IsFailure);
         Assert.Equal("chat.message_empty", result.Error.Code);
@@ -22,7 +23,7 @@ public sealed class SendMessageValidatorTests
     {
         var validator = new SendMessageValidator(new SendMessageOptions(MaxMessageLength: 3));
 
-        var result = validator.Validate(new SendMessageCommand(null, "abcd"));
+        Result result = validator.Validate(new SendMessageCommand(null, "abcd"));
 
         Assert.True(result.IsFailure);
         Assert.Equal("chat.message_too_long", result.Error.Code);
@@ -33,7 +34,7 @@ public sealed class SendMessageValidatorTests
     {
         var validator = new SendMessageValidator(new SendMessageOptions(MaxMessageLength: 10));
 
-        var result = validator.Validate(new SendMessageCommand(null, "hello"));
+        Result result = validator.Validate(new SendMessageCommand(null, "hello"));
 
         Assert.True(result.IsSuccess);
     }

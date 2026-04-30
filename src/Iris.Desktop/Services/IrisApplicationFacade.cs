@@ -1,9 +1,11 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+
 using Iris.Application.Chat.SendMessage;
 using Iris.Domain.Conversations;
 using Iris.Shared.Results;
+
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Iris.Desktop.Services;
@@ -22,8 +24,8 @@ public sealed class IrisApplicationFacade : IIrisApplicationFacade
         string message,
         CancellationToken cancellationToken)
     {
-        await using var scope = _scopeFactory.CreateAsyncScope();
-        var sendMessageHandler = scope.ServiceProvider.GetRequiredService<SendMessageHandler>();
+        await using AsyncServiceScope scope = _scopeFactory.CreateAsyncScope();
+        SendMessageHandler sendMessageHandler = scope.ServiceProvider.GetRequiredService<SendMessageHandler>();
 
         return await sendMessageHandler.HandleAsync(
             new SendMessageCommand(conversationId, message),

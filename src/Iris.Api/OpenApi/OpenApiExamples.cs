@@ -1,4 +1,4 @@
-﻿namespace Iris.Api.OpenApi
+namespace Iris.Api.OpenApi
 {
     public class OpenApiExamples
     {

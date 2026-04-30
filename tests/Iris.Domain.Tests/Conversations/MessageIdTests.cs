@@ -1,3 +1,5 @@
+using System.Reflection;
+
 using Iris.Domain.Common;
 using Iris.Domain.Conversations;
 
@@ -16,7 +18,7 @@ public sealed class MessageIdTests
     [Fact]
     public void From_WithEmptyGuid_ThrowsDomainException()
     {
-        var exception = Assert.Throws<DomainException>(() => MessageId.From(Guid.Empty));
+        DomainException exception = Assert.Throws<DomainException>(() => MessageId.From(Guid.Empty));
 
         Assert.Equal("message.empty_id", exception.Code);
     }
@@ -24,11 +26,11 @@ public sealed class MessageIdTests
     [Fact]
     public void Type_DoesNotExposePublicGuidConstructor()
     {
-        var constructors = typeof(MessageId).GetConstructors();
+        ConstructorInfo[] constructors = typeof(MessageId).GetConstructors();
 
         Assert.DoesNotContain(constructors, constructor =>
         {
-            var parameters = constructor.GetParameters();
+            ParameterInfo[] parameters = constructor.GetParameters();
             return parameters.Length == 1 && parameters[0].ParameterType == typeof(Guid);
         });
     }

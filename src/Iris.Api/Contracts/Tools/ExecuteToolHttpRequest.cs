@@ -1,4 +1,4 @@
-﻿namespace Iris.Api.Contracts.Tools
+namespace Iris.Api.Contracts.Tools
 {
     public class ExecuteToolHttpRequest
     {

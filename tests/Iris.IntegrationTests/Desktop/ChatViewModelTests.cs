@@ -86,7 +86,7 @@ public sealed class ChatViewModelTests
             InputText = "hello"
         };
 
-        var firstSend = viewModel.SendMessageCommand.ExecuteAsync(null);
+        Task firstSend = viewModel.SendMessageCommand.ExecuteAsync(null);
         await fakeFacade.WaitForCallsAsync(1);
 
         Assert.True(viewModel.IsSending);
@@ -178,8 +178,8 @@ public sealed class ChatViewModelTests
             string userMessage,
             string assistantMessage)
         {
-            var resolvedConversationId = conversationId ?? ConversationId.New();
-            var now = DateTimeOffset.UtcNow;
+            ConversationId resolvedConversationId = conversationId ?? ConversationId.New();
+            DateTimeOffset now = DateTimeOffset.UtcNow;
             var userDto = new ChatMessageDto(
                 MessageId.New(),
                 resolvedConversationId,

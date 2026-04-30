@@ -4,6 +4,7 @@ using Iris.Application.Abstractions.Persistence;
 using Iris.Application.Chat.SendMessage;
 using Iris.Domain.Conversations;
 using Iris.Shared.Results;
+
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Iris.Application.Tests;
@@ -21,7 +22,7 @@ public sealed class DependencyInjectionTests
         services.AddSingleton<IChatModelClient, FakeChatModelClient>();
         services.AddIrisApplication(new SendMessageOptions(8000));
 
-        using var provider = services.BuildServiceProvider();
+        using ServiceProvider provider = services.BuildServiceProvider();
 
         Assert.NotNull(provider.GetRequiredService<SendMessageHandler>());
     }
@@ -41,7 +42,7 @@ public sealed class DependencyInjectionTests
     {
         var services = new ServiceCollection();
 
-        var exception = Assert.Throws<InvalidOperationException>(
+        InvalidOperationException exception = Assert.Throws<InvalidOperationException>(
             () => services.AddIrisApplication(new SendMessageOptions(maxMessageLength)));
 
         Assert.Equal("Chat max message length must be greater than zero.", exception.Message);

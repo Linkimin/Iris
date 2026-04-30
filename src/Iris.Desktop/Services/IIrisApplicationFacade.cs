@@ -1,5 +1,6 @@
 using System.Threading;
 using System.Threading.Tasks;
+
 using Iris.Application.Chat.SendMessage;
 using Iris.Domain.Conversations;
 using Iris.Shared.Results;

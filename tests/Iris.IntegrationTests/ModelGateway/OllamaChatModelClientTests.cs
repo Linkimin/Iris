@@ -1,9 +1,12 @@
 using System.Net;
 using System.Text.Json;
+
 using Iris.Application.Abstractions.Models.Contracts.Chat;
 using Iris.Application.Abstractions.Models.Interfaces;
 using Iris.ModelGateway;
 using Iris.ModelGateway.Ollama;
+using Iris.Shared.Results;
+
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Iris.Integration.Tests.ModelGateway;
@@ -31,9 +34,9 @@ public sealed class OllamaChatModelClientTests
                 """);
         });
 
-        var client = CreateClient(handler);
+        OllamaChatModelClient client = CreateClient(handler);
 
-        var result = await client.SendAsync(CreateRequest(), CancellationToken.None);
+        Result<ChatModelResponse> result = await client.SendAsync(CreateRequest(), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.Equal("Hello from Ollama", result.Value.Content);
@@ -43,7 +46,7 @@ public sealed class OllamaChatModelClientTests
         Assert.Equal("application/json", handler.LastRequest.Content!.Headers.ContentType!.MediaType);
 
         using var document = JsonDocument.Parse(requestJson!);
-        var root = document.RootElement;
+        JsonElement root = document.RootElement;
         Assert.Equal("llama3.1", root.GetProperty("model").GetString());
         Assert.False(root.GetProperty("stream").GetBoolean());
         Assert.Equal("user", root.GetProperty("messages")[0].GetProperty("role").GetString());
@@ -56,9 +59,9 @@ public sealed class OllamaChatModelClientTests
     {
         var handler = new FakeHttpMessageHandler((_, _) =>
             throw new HttpRequestException("connection refused with private details"));
-        var client = CreateClient(handler);
+        OllamaChatModelClient client = CreateClient(handler);
 
-        var result = await client.SendAsync(CreateRequest(), CancellationToken.None);
+        Result<ChatModelResponse> result = await client.SendAsync(CreateRequest(), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("model_gateway.provider_unavailable", result.Error.Code);
@@ -70,9 +73,9 @@ public sealed class OllamaChatModelClientTests
     {
         var handler = new FakeHttpMessageHandler((_, _) =>
             throw new TaskCanceledException("provider timeout"));
-        var client = CreateClient(handler);
+        OllamaChatModelClient client = CreateClient(handler);
 
-        var result = await client.SendAsync(CreateRequest(), CancellationToken.None);
+        Result<ChatModelResponse> result = await client.SendAsync(CreateRequest(), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("model_gateway.provider_timeout", result.Error.Code);
@@ -86,7 +89,7 @@ public sealed class OllamaChatModelClientTests
             cancellationToken.ThrowIfCancellationRequested();
             return Task.FromResult(JsonResponse("{}"));
         });
-        var client = CreateClient(handler);
+        OllamaChatModelClient client = CreateClient(handler);
         using var cancellationTokenSource = new CancellationTokenSource();
         await cancellationTokenSource.CancelAsync();
 
@@ -104,9 +107,9 @@ public sealed class OllamaChatModelClientTests
             {
                 Content = new StringContent("raw provider body")
             }));
-        var client = CreateClient(handler);
+        OllamaChatModelClient client = CreateClient(handler);
 
-        var result = await client.SendAsync(CreateRequest(), CancellationToken.None);
+        Result<ChatModelResponse> result = await client.SendAsync(CreateRequest(), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal(expectedCode, result.Error.Code);
@@ -121,9 +124,9 @@ public sealed class OllamaChatModelClientTests
             {
                 Content = new StringContent("{ invalid json")
             }));
-        var client = CreateClient(handler);
+        OllamaChatModelClient client = CreateClient(handler);
 
-        var result = await client.SendAsync(CreateRequest(), CancellationToken.None);
+        Result<ChatModelResponse> result = await client.SendAsync(CreateRequest(), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("model_gateway.provider_invalid_response", result.Error.Code);
@@ -142,9 +145,9 @@ public sealed class OllamaChatModelClientTests
                   "done": true
                 }
                 """)));
-        var client = CreateClient(handler);
+        OllamaChatModelClient client = CreateClient(handler);
 
-        var result = await client.SendAsync(CreateRequest(), CancellationToken.None);
+        Result<ChatModelResponse> result = await client.SendAsync(CreateRequest(), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("model_gateway.provider_empty_response", result.Error.Code);
@@ -162,7 +165,7 @@ public sealed class OllamaChatModelClientTests
             options.Timeout = TimeSpan.FromSeconds(30);
         });
 
-        using var provider = services.BuildServiceProvider();
+        using ServiceProvider provider = services.BuildServiceProvider();
 
         Assert.IsAssignableFrom<IChatModelClient>(provider.GetRequiredService<IChatModelClient>());
     }
@@ -172,7 +175,7 @@ public sealed class OllamaChatModelClientTests
     {
         var services = new ServiceCollection();
 
-        var exception = Assert.Throws<InvalidOperationException>(() =>
+        InvalidOperationException exception = Assert.Throws<InvalidOperationException>(() =>
             services.AddIrisModelGateway(options =>
             {
                 options.ChatModel = "llama3.1";
@@ -187,7 +190,7 @@ public sealed class OllamaChatModelClientTests
     {
         var services = new ServiceCollection();
 
-        var exception = Assert.Throws<InvalidOperationException>(() =>
+        InvalidOperationException exception = Assert.Throws<InvalidOperationException>(() =>
             services.AddIrisModelGateway(options =>
             {
                 options.BaseUrl = "file:///tmp/ollama";

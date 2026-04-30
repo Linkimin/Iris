@@ -18,7 +18,7 @@ public sealed class MessageContentTests
     [InlineData(" ")]
     public void Create_WithBlankText_ThrowsDomainException(string value)
     {
-        var exception = Assert.Throws<DomainException>(() => MessageContent.Create(value));
+        DomainException exception = Assert.Throws<DomainException>(() => MessageContent.Create(value));
 
         Assert.Equal("message.empty_content", exception.Code);
     }

@@ -1,7 +1,9 @@
 using Iris.Application.Abstractions.Persistence;
 using Iris.Domain.Conversations;
 using Iris.Persistence.Database;
+using Iris.Persistence.Entities;
 using Iris.Persistence.Mapping;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace Iris.Persistence.Repositories;
@@ -25,7 +27,7 @@ public sealed class MessageRepository : IMessageRepository
             return Array.Empty<Message>();
         }
 
-        var newestEntities = await _dbContext.Messages
+        List<MessageEntity> newestEntities = await _dbContext.Messages
             .AsNoTracking()
             .Where(message => message.ConversationId == conversationId.Value)
             .OrderByDescending(message => message.CreatedAt)
@@ -44,7 +46,7 @@ public sealed class MessageRepository : IMessageRepository
         Message message,
         CancellationToken cancellationToken)
     {
-        var entity = MessageMapper.ToEntity(message);
+        MessageEntity entity = MessageMapper.ToEntity(message);
         await _dbContext.Messages.AddAsync(entity, cancellationToken);
     }
 }

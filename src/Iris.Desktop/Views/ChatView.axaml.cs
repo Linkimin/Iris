@@ -1,6 +1,8 @@
 using Avalonia.Controls;
 using Avalonia.Input;
+
 using CommunityToolkit.Mvvm.Input;
+
 using Iris.Desktop.ViewModels;
 
 namespace Iris.Desktop.Views

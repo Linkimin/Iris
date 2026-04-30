@@ -1,3 +1,4 @@
+using Iris.Domain.Common;
 using Iris.Domain.Conversations;
 
 namespace Iris.Domain.Tests.Conversations;
@@ -32,7 +33,7 @@ public sealed class MessageTests
     [InlineData((MessageRole)999)]
     public void Create_WithUndefinedRole_ThrowsDomainException(MessageRole role)
     {
-        var exception = Assert.Throws<Iris.Domain.Common.DomainException>(() =>
+        DomainException exception = Assert.Throws<Iris.Domain.Common.DomainException>(() =>
             Message.Create(
                 MessageId.New(),
                 ConversationId.New(),

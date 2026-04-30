@@ -1,6 +1,7 @@
 using System.Net.Http.Json;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+
 using Iris.Application.Abstractions.Models.Contracts.Chat;
 using Iris.Application.Abstractions.Models.Interfaces;
 using Iris.ModelGateway.Http;
@@ -30,13 +31,13 @@ internal sealed class OllamaChatModelClient : IChatModelClient
         ChatModelRequest request,
         CancellationToken cancellationToken)
     {
-        var optionsValidation = _options.Validate();
+        Result optionsValidation = _options.Validate();
         if (optionsValidation.IsFailure)
         {
             return Result<ChatModelResponse>.Failure(optionsValidation.Error);
         }
 
-        var mappedRequest = OllamaRequestMapper.Map(request, _options);
+        Result<OllamaChatRequest> mappedRequest = OllamaRequestMapper.Map(request, _options);
         if (mappedRequest.IsFailure)
         {
             return Result<ChatModelResponse>.Failure(mappedRequest.Error);
@@ -44,7 +45,7 @@ internal sealed class OllamaChatModelClient : IChatModelClient
 
         try
         {
-            using var response = await _httpClient.PostAsJsonAsync(
+            using HttpResponseMessage response = await _httpClient.PostAsJsonAsync(
                 "/api/chat",
                 mappedRequest.Value,
                 JsonOptions,
@@ -56,7 +57,7 @@ internal sealed class OllamaChatModelClient : IChatModelClient
                     ModelGatewayHttpErrorHandler.FromStatusCode(response.StatusCode));
             }
 
-            var ollamaResponse = await response.Content.ReadFromJsonAsync<OllamaChatResponse>(
+            OllamaChatResponse? ollamaResponse = await response.Content.ReadFromJsonAsync<OllamaChatResponse>(
                 JsonOptions,
                 cancellationToken);
 

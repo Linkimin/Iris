@@ -28,7 +28,7 @@ internal static class OllamaRequestMapper
                 "Chat model request must contain at least one message."));
         }
 
-        var chatOptions = request.Options ?? new ChatModelOptions();
+        ChatModelOptions chatOptions = request.Options ?? new ChatModelOptions();
         var model = ResolveModel(chatOptions.Model, options.ChatModel);
         if (string.IsNullOrWhiteSpace(model))
         {
@@ -49,7 +49,7 @@ internal static class OllamaRequestMapper
         }
 
         var messages = new List<OllamaChatMessage>(request.Messages.Count);
-        foreach (var message in request.Messages)
+        foreach (ChatModelMessage message in request.Messages)
         {
             if (string.IsNullOrWhiteSpace(message.Content))
             {
@@ -69,7 +69,7 @@ internal static class OllamaRequestMapper
             messages.Add(new OllamaChatMessage(role, message.Content));
         }
 
-        var requestOptions = chatOptions.Temperature is null
+        OllamaChatOptions? requestOptions = chatOptions.Temperature is null
             ? null
             : new OllamaChatOptions(chatOptions.Temperature);
 
