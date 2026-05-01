@@ -2,6 +2,7 @@ using System;
 
 using Iris.Application;
 using Iris.Application.Chat.SendMessage;
+using Iris.Desktop.Models;
 using Iris.Desktop.Services;
 using Iris.Desktop.ViewModels;
 using Iris.ModelGateway;
@@ -59,6 +60,19 @@ internal static class DependencyInjection
         services.AddTransient<ChatViewModel>();
         services.AddTransient<MainWindowViewModel>();
 
+        var avatarEnabled = configuration.GetValue<bool?>("Desktop:Avatar:Enabled") ?? true;
+        var avatarSizeString = configuration.GetValue<string>("Desktop:Avatar:Size");
+        var avatarPositionString = configuration.GetValue<string>("Desktop:Avatar:Position");
+        var avatarDurationString = configuration.GetValue<string>("Desktop:Avatar:SuccessDisplayDurationSeconds");
+
+        AvatarSize avatarSize = ParseEnumOrDefault<AvatarSize>(avatarSizeString, AvatarSize.Medium);
+        AvatarPosition avatarPosition = ParseEnumOrDefault<AvatarPosition>(avatarPositionString, AvatarPosition.BottomRight);
+        var avatarDuration = ParseDoubleOrDefault(avatarDurationString, 2.0);
+
+        var avatarOptions = new AvatarOptions(avatarEnabled, avatarSize, avatarPosition, avatarDuration);
+        services.AddSingleton(avatarOptions);
+        services.AddTransient<AvatarViewModel>();
+
         return services;
     }
 
@@ -88,5 +102,26 @@ internal static class DependencyInjection
         }
 
         return value.Value;
+    }
+
+    internal static T ParseEnumOrDefault<T>(string? value, T defaultValue)
+        where T : struct, Enum
+    {
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            return defaultValue;
+        }
+
+        return Enum.TryParse<T>(value, ignoreCase: true, out T result) ? result : defaultValue;
+    }
+
+    internal static double ParseDoubleOrDefault(string? value, double defaultValue)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            return defaultValue;
+        }
+
+        return double.TryParse(value, out var result) && result > 0 ? result : defaultValue;
     }
 }

@@ -1,4 +1,3 @@
-
 ---
 name: verify
 description: Run and report repository verification after implementation. Use to validate build, tests, formatting, architecture rules, documentation checks, and task-specific acceptance criteria.

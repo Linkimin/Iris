@@ -2,12 +2,13 @@ namespace Iris.Desktop.ViewModels;
 
 public sealed partial class MainWindowViewModel : ViewModelBase
 {
-    public MainWindowViewModel(ChatViewModel chat)
+    public MainWindowViewModel(ChatViewModel chat, AvatarViewModel avatar)
     {
         Chat = chat;
+        Avatar = avatar;
     }
 
-    public string Greeting { get; } = "Welcome to Avalonia!";
-
     public ChatViewModel Chat { get; }
+
+    public AvatarViewModel Avatar { get; }
 }

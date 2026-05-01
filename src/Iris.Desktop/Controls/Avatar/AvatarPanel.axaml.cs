@@ -1,12 +1,11 @@
 using Avalonia.Controls;
 
-namespace Iris.Desktop.Controls.Avatar
+namespace Iris.Desktop.Controls.Avatar;
+
+public partial class AvatarPanel : UserControl
 {
-    internal partial class AvatarPanel : UserControl
+    public AvatarPanel()
     {
-        public AvatarPanel()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

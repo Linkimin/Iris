@@ -1,5 +1,77 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             x:Class="Iris.Desktop.Controls.Avatar.AvatarPanel">
-  <Grid />
+             xmlns:vm="using:Iris.Desktop.ViewModels"
+             xmlns:converters="using:Iris.Desktop.Converters"
+             xmlns:models="using:Iris.Desktop.Models"
+             x:Class="Iris.Desktop.Controls.Avatar.AvatarPanel"
+             x:DataType="vm:AvatarViewModel">
+
+  <UserControl.Resources>
+    <converters:StateEqualityConverter x:Key="StateEqualityConverter" />
+    <converters:NotHiddenConverter x:Key="NotHiddenConverter" />
+    <converters:AvatarSizeToPixelConverter x:Key="SizeConverter" />
+    <converters:AvatarPositionToAlignmentConverter x:Key="PositionToHorizontalAlignment" />
+    <converters:AvatarPositionToAlignmentConverter x:Key="PositionToVerticalAlignment" />
+    <models:AvatarState x:Key="IdleState">Idle</models:AvatarState>
+    <models:AvatarState x:Key="ThinkingState">Thinking</models:AvatarState>
+    <models:AvatarState x:Key="SpeakingState">Speaking</models:AvatarState>
+    <models:AvatarState x:Key="SuccessState">Success</models:AvatarState>
+    <models:AvatarState x:Key="ErrorState">Error</models:AvatarState>
+  </UserControl.Resources>
+
+  <Grid IsVisible="{Binding State, Converter={StaticResource NotHiddenConverter}}"
+        Width="{Binding Size, Converter={StaticResource SizeConverter}}"
+        Height="{Binding Size, Converter={StaticResource SizeConverter}}">
+
+    <!-- Idle image -->
+    <Image Source="/Assets/Avatars/idle.png"
+           IsVisible="{Binding State,
+               Converter={StaticResource StateEqualityConverter},
+               ConverterParameter={StaticResource IdleState}}" />
+    <!-- Thinking image -->
+    <Image Source="/Assets/Avatars/thinking.png"
+           IsVisible="{Binding State,
+               Converter={StaticResource StateEqualityConverter},
+               ConverterParameter={StaticResource ThinkingState}}" />
+    <!-- Speaking image (reserved for Voice v1) -->
+    <Image Source="/Assets/Avatars/speaking.png"
+           IsVisible="{Binding State,
+               Converter={StaticResource StateEqualityConverter},
+               ConverterParameter={StaticResource SpeakingState}}" />
+    <!-- Success image -->
+    <Image Source="/Assets/Avatars/success.png"
+           IsVisible="{Binding State,
+               Converter={StaticResource StateEqualityConverter},
+               ConverterParameter={StaticResource SuccessState}}" />
+    <!-- Error image -->
+    <Image Source="/Assets/Avatars/error.png"
+           IsVisible="{Binding State,
+               Converter={StaticResource StateEqualityConverter},
+               ConverterParameter={StaticResource ErrorState}}" />
+
+    <!-- Fallback visual when images are unavailable -->
+    <Panel x:Name="FallbackPanel"
+           IsVisible="True">
+      <Panel.Styles>
+        <Style Selector="Ellipse.fallbackCircle">
+          <Setter Property="Fill" Value="#404040" />
+          <Setter Property="Stroke" Value="#808080" />
+          <Setter Property="StrokeThickness" Value="2" />
+          <Setter Property="Width" Value="60" />
+          <Setter Property="Height" Value="60" />
+          <Setter Property="HorizontalAlignment" Value="Center" />
+          <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+        <Style Selector="TextBlock.fallbackText">
+          <Setter Property="Foreground" Value="#C0C0C0" />
+          <Setter Property="FontSize" Value="10" />
+          <Setter Property="HorizontalAlignment" Value="Center" />
+          <Setter Property="VerticalAlignment" Value="Center" />
+          <Setter Property="Text" Value="Iris" />
+        </Style>
+      </Panel.Styles>
+      <Ellipse Classes="fallbackCircle" />
+      <TextBlock Classes="fallbackText" />
+    </Panel>
+  </Grid>
 </UserControl>
