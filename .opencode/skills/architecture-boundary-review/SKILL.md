@@ -1,4 +1,3 @@
-
 ---
 name: architecture-boundary-review
 description: Review architecture boundaries, dependency direction, layer ownership, forbidden shortcuts, project references, and long-term structural drift. Use before or after implementation when a change may affect system architecture.

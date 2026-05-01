@@ -1,4 +1,3 @@
-
 ---
 name: implement
 description: Implement an approved plan with minimal, architecture-compliant changes. Use only after a specification, design, and implementation plan exist or the user explicitly authorizes a small direct implementation.

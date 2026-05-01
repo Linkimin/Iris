@@ -1,4 +1,3 @@
-
 ---
 name: audit
 description: Run a structured engineering audit after implementation or before merge. Use to review spec compliance, test quality, architecture/SOLID, clean code, maintainability, security-sensitive risks, and verification evidence.

@@ -1,4 +1,3 @@
-
 ---
 name: agent-memory
 description: Maintain project agent memory files after meaningful work. Use to update PROJECT_LOG, overview, log_notes, mem_library, checkpoints, and durable project state without changing source behavior.
