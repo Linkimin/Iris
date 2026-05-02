@@ -24,6 +24,7 @@
     <controls:AvatarPanel DataContext="{Binding Avatar}"
                           HorizontalAlignment="{Binding Position, Converter={StaticResource PositionToHorizontalAlignment}, ConverterParameter=Horizontal}"
                           VerticalAlignment="{Binding Position, Converter={StaticResource PositionToVerticalAlignment}, ConverterParameter=Vertical}"
-                          Margin="16" />
+                          Margin="16"
+                          IsHitTestVisible="False" />
   </Grid>
 </Window>

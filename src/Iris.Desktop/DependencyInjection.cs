@@ -2,6 +2,8 @@ using System;
 
 using Iris.Application;
 using Iris.Application.Chat.SendMessage;
+using Iris.Application.Persona.Language;
+using Iris.Desktop.Hosting;
 using Iris.Desktop.Models;
 using Iris.Desktop.Services;
 using Iris.Desktop.ViewModels;
@@ -27,11 +29,6 @@ internal static class DependencyInjection
             "Application:Chat:MaxMessageLength",
             "Chat max message length must be configured and greater than zero.");
 
-        var databaseConnectionString = GetRequiredString(
-            configuration,
-            "Database:ConnectionString",
-            "Database connection string is required.");
-
         var ollamaBaseUrl = GetRequiredString(
             configuration,
             "ModelGateway:Ollama:BaseUrl",
@@ -47,8 +44,21 @@ internal static class DependencyInjection
             "ModelGateway:Ollama:TimeoutSeconds",
             "Ollama timeout seconds must be configured and greater than zero.");
 
-        services.AddIrisApplication(new SendMessageOptions(maxMessageLength));
-        services.AddIrisPersistence(options => options.ConnectionString = databaseConnectionString);
+        var appDataLocator = new DesktopAppDataLocator();
+        appDataLocator.EnsureExists();
+
+        var configuredDatabaseOverride = configuration.GetValue<string?>("Database:ConnectionString");
+        var resolvedDatabaseConnectionString = DesktopDatabasePathResolver.Resolve(
+            configuredDatabaseOverride,
+            appDataLocator);
+
+        var configuredLanguage = configuration.GetValue<string?>("Persona:Language:DefaultLanguage");
+        LanguageOptions languageOptions = string.IsNullOrWhiteSpace(configuredLanguage)
+            ? LanguageOptions.Default
+            : new LanguageOptions(configuredLanguage);
+
+        services.AddIrisApplication(new SendMessageOptions(maxMessageLength), languageOptions);
+        services.AddIrisPersistence(options => options.ConnectionString = resolvedDatabaseConnectionString);
         services.AddIrisModelGateway(options =>
         {
             options.BaseUrl = ollamaBaseUrl;
@@ -57,8 +67,14 @@ internal static class DependencyInjection
         });
 
         services.AddSingleton<IIrisApplicationFacade, IrisApplicationFacade>();
-        services.AddTransient<ChatViewModel>();
-        services.AddTransient<MainWindowViewModel>();
+        // ChatViewModel and AvatarViewModel must share the same ChatViewModel
+        // instance so AvatarViewModel can react to ChatViewModel.IsSending /
+        // HasError / Messages changes that the UI binds to. With Transient
+        // registration each constructor injection produces a different
+        // ChatViewModel, so the avatar listens to a dead instance.
+        // Single-window app → Singleton is the simplest correct lifetime.
+        services.AddSingleton<ChatViewModel>();
+        services.AddSingleton<MainWindowViewModel>();
 
         var avatarEnabled = configuration.GetValue<bool?>("Desktop:Avatar:Enabled") ?? true;
         var avatarSizeString = configuration.GetValue<string>("Desktop:Avatar:Size");
@@ -71,7 +87,7 @@ internal static class DependencyInjection
 
         var avatarOptions = new AvatarOptions(avatarEnabled, avatarSize, avatarPosition, avatarDuration);
         services.AddSingleton(avatarOptions);
-        services.AddTransient<AvatarViewModel>();
+        services.AddSingleton<AvatarViewModel>();
 
         return services;
     }

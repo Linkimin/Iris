@@ -1,4 +1,5 @@
 using Iris.Application.Abstractions.Models.Contracts.Chat;
+using Iris.Application.Persona.Language;
 using Iris.Domain.Conversations;
 using Iris.Shared.Results;
 
@@ -6,14 +7,19 @@ namespace Iris.Application.Chat.Prompting;
 
 public sealed class PromptBuilder
 {
-    private const string _baselineSystemPrompt =
-        "You are Iris, a local personal AI companion. Be helpful, clear, and respectful.";
+    private readonly ILanguagePolicy _languagePolicy;
+
+    public PromptBuilder(ILanguagePolicy languagePolicy)
+    {
+        ArgumentNullException.ThrowIfNull(languagePolicy);
+        _languagePolicy = languagePolicy;
+    }
 
     public Result<PromptBuildResult> Build(PromptBuildRequest request)
     {
         var messages = new List<ChatModelMessage>
         {
-            new(ChatModelRole.System, _baselineSystemPrompt)
+            new(ChatModelRole.System, _languagePolicy.GetSystemPrompt())
         };
 
         messages.AddRange(request.RecentMessages.Select(MapHistoryMessage));

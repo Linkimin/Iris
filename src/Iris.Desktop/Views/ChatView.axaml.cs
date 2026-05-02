@@ -1,37 +1,19 @@
 using Avalonia.Controls;
-using Avalonia.Input;
-
-using CommunityToolkit.Mvvm.Input;
-
-using Iris.Desktop.ViewModels;
 
 namespace Iris.Desktop.Views
 {
     internal partial class ChatView : UserControl
     {
+        // Enter-to-send is wired declaratively via TextBox.KeyBindings in
+        // ChatView.axaml. Shift+Enter still inserts a newline because the
+        // KeyBinding gesture is bare "Enter" (no modifiers). KeyBinding fires
+        // before the TextBox processes Enter as a newline, which is the
+        // reliable behavior in Avalonia 12 (a code-behind KeyDown handler
+        // attached via += subscribes only to the bubbling phase and is
+        // bypassed when the TextBox handles the key first).
         public ChatView()
         {
             InitializeComponent();
-            InputTextBox.KeyDown += OnInputTextBoxKeyDown;
-        }
-
-        private async void OnInputTextBoxKeyDown(object? sender, KeyEventArgs e)
-        {
-            if (e.Key != Key.Enter || e.KeyModifiers.HasFlag(KeyModifiers.Shift))
-            {
-                return;
-            }
-
-            e.Handled = true;
-
-            if (DataContext is not ChatViewModel viewModel ||
-                viewModel.SendMessageCommand is not IAsyncRelayCommand command ||
-                !command.CanExecute(null))
-            {
-                return;
-            }
-
-            await command.ExecuteAsync(null);
         }
     }
 }

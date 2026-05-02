@@ -3,6 +3,7 @@ using Iris.Application.Abstractions.Models.Interfaces;
 using Iris.Application.Abstractions.Persistence;
 using Iris.Application.Chat.Prompting;
 using Iris.Application.Chat.SendMessage;
+using Iris.Application.Persona.Language;
 using Iris.Domain.Conversations;
 using Iris.Shared.Results;
 using Iris.Shared.Time.Interfaces;
@@ -317,7 +318,7 @@ public sealed class SendMessageHandlerTests
             messages,
             unitOfWork,
             model,
-            new PromptBuilder(),
+            new PromptBuilder(new RussianDefaultLanguagePolicy(LanguageOptions.Default, new LanguageInstructionBuilder())),
             new SendMessageValidator(new SendMessageOptions(MaxMessageLength: 10_000)),
             clock);
     }
