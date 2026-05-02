@@ -51,6 +51,8 @@ Use these stages deliberately:
 
 | Stage | Role | May edit code? | May update memory? |
 |---|---|---:|---:|
+| `/brainstorm` | Pre-spec collaborative scoping dialogue | No | No |
+| `/debug` | Systematic root cause investigation, no fixes | No | No |
 | `/status` | Report current factual state | No | No |
 | `/spec` | Define problem, scope, non-goals, acceptance | No | No |
 | `/design` | Define boundaries, contracts, flow, failures | No | No |
@@ -72,7 +74,9 @@ When the user request is ambiguous, choose the safest stage from evidence:
 | User asks | Use stage | Why |
 |---|---|---|
 | "What is current state?" | `/status` | factual reporting only |
-| "Let's think / decide / scope" | `/spec` or `/design` | no edits yet |
+| "Bug / test failure / build failure" | `/debug` | diagnostic investigation, no fixes |
+| "Let's think / brainstorm / explore" | `/brainstorm` | pre-spec dialogue, no edits |
+| "Let's decide / scope" (clear scope ready) | `/spec` or `/design` | no edits yet |
 | "Write a plan" | `/plan` | implementation is not authorized |
 | "Start / implement / continue" with approved plan | `/implement` | code/config/docs may change |
 | "Check / run tests / is it passing?" | `/verify` | evidence only |
@@ -284,6 +288,26 @@ Read-only commands must explicitly state that no files were modified.
 Implementation results must list changed files and deviations from the plan.
 
 ## Minimum Output By Stage
+
+`/brainstorm`:
+
+- problem summary;
+- agreed scope boundary;
+- non-goals;
+- selected approach rationale;
+- open questions;
+- recommended next stage.
+
+`/debug`:
+
+- symptom;
+- reproduction;
+- evidence gathered;
+- root cause (with confidence);
+- affected layers;
+- architecture check;
+- recommended fix approach;
+- recommended next stage.
 
 `/status`:
 

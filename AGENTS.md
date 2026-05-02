@@ -9,15 +9,18 @@ This repository is an engineering project, not a sandbox. Preserve architecture,
 
 For non-trivial work, use:
 
-1. Spec
-2. Design
-3. Plan
-4. Implement
-5. Verify
-6. Review
-7. Audit
+1. Brainstorm (optional)
+2. Spec
+3. Design
+4. Plan
+5. Implement
+6. Verify
+7. Review
+8. Audit
 
 Do not jump directly into implementation unless the change is trivial and local.
+
+For failures (bugs, test failures, build failures), use Debug before planning a fix.
 
 ## Rule Files
 
@@ -37,6 +40,9 @@ Use only rule files relevant to the task. Do not flood context unnecessarily.
 
 Use workflow skills from:
 
+- `.opencode/skills/iris-brainstorm/SKILL.md`
+- `.opencode/skills/iris-debug/SKILL.md`
+- `.opencode/skills/iris-tdd/SKILL.md`
 - `.opencode/skills/spec/SKILL.md`
 - `.opencode/skills/design/SKILL.md`
 - `.opencode/skills/plan/SKILL.md`
