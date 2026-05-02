@@ -47,5 +47,6 @@
   <ItemGroup>
     <Content Include="appsettings.json" CopyToOutputDirectory="PreserveNewest" />
     <None Update="appsettings.local.json" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="appsettings.local.example.json" />
   </ItemGroup>
 </Project>

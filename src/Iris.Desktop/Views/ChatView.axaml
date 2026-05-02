@@ -62,11 +62,19 @@
                  MinHeight="48"
                  MaxHeight="160"
                  IsEnabled="{Binding CanEditInput}"
-                 PlaceholderText="Message Iris" />
+                 PlaceholderText="Message Iris (Enter to send, Shift+Enter for new line)">
+          <TextBox.KeyBindings>
+            <KeyBinding Gesture="Enter"
+                        Command="{Binding SendMessageCommand}" />
+          </TextBox.KeyBindings>
+        </TextBox>
 
         <Button Grid.Column="1"
                 MinWidth="96"
                 VerticalAlignment="Stretch"
+                Background="#3B82F6"
+                Foreground="#F2F4F8"
+                FontWeight="SemiBold"
                 Command="{Binding SendMessageCommand}">
           Send
         </Button>

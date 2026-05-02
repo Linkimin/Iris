@@ -2,6 +2,7 @@ using Iris.Application.Abstractions.Models.Contracts.Chat;
 using Iris.Application.Abstractions.Models.Interfaces;
 using Iris.Application.Abstractions.Persistence;
 using Iris.Application.Chat.SendMessage;
+using Iris.Application.Persona.Language;
 using Iris.Domain.Conversations;
 using Iris.Shared.Results;
 
@@ -20,7 +21,7 @@ public sealed class DependencyInjectionTests
         services.AddSingleton<IMessageRepository, FakeMessageRepository>();
         services.AddSingleton<IUnitOfWork, FakeUnitOfWork>();
         services.AddSingleton<IChatModelClient, FakeChatModelClient>();
-        services.AddIrisApplication(new SendMessageOptions(8000));
+        services.AddIrisApplication(new SendMessageOptions(8000), LanguageOptions.Default);
 
         using ServiceProvider provider = services.BuildServiceProvider();
 
@@ -32,7 +33,7 @@ public sealed class DependencyInjectionTests
     {
         var services = new ServiceCollection();
 
-        Assert.Throws<ArgumentNullException>(() => services.AddIrisApplication(null!));
+        Assert.Throws<ArgumentNullException>(() => services.AddIrisApplication(null!, LanguageOptions.Default));
     }
 
     [Theory]
@@ -43,9 +44,35 @@ public sealed class DependencyInjectionTests
         var services = new ServiceCollection();
 
         InvalidOperationException exception = Assert.Throws<InvalidOperationException>(
-            () => services.AddIrisApplication(new SendMessageOptions(maxMessageLength)));
+            () => services.AddIrisApplication(new SendMessageOptions(maxMessageLength), LanguageOptions.Default));
 
         Assert.Equal("Chat max message length must be greater than zero.", exception.Message);
+    }
+
+    [Fact]
+    public void AddIrisApplication_WithNullLanguageOptions_Throws()
+    {
+        var services = new ServiceCollection();
+
+        Assert.Throws<ArgumentNullException>(() => services.AddIrisApplication(new SendMessageOptions(8000), null!));
+    }
+
+    [Fact]
+    public void AddIrisApplication_RegistersILanguagePolicy()
+    {
+        var services = new ServiceCollection();
+
+        services.AddSingleton<IConversationRepository, FakeConversationRepository>();
+        services.AddSingleton<IMessageRepository, FakeMessageRepository>();
+        services.AddSingleton<IUnitOfWork, FakeUnitOfWork>();
+        services.AddSingleton<IChatModelClient, FakeChatModelClient>();
+        services.AddIrisApplication(new SendMessageOptions(8000), LanguageOptions.Default);
+
+        using ServiceProvider provider = services.BuildServiceProvider();
+
+        ILanguagePolicy policy = provider.GetRequiredService<ILanguagePolicy>();
+        Assert.NotNull(policy);
+        Assert.IsType<RussianDefaultLanguagePolicy>(policy);
     }
 
     private sealed class FakeConversationRepository : IConversationRepository

@@ -6,6 +6,7 @@ agent: builder
 # /implement
 
 Use the `iris-engineering` skill.
+Use the `iris-tdd` skill.
 Use the `implement` skill.
 
 Implement the approved implementation plan for:

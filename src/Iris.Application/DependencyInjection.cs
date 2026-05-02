@@ -1,5 +1,6 @@
 using Iris.Application.Chat.Prompting;
 using Iris.Application.Chat.SendMessage;
+using Iris.Application.Persona.Language;
 using Iris.Shared.Time;
 using Iris.Shared.Time.Interfaces;
 
@@ -11,10 +12,12 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddIrisApplication(
         this IServiceCollection services,
-        SendMessageOptions sendMessageOptions)
+        SendMessageOptions sendMessageOptions,
+        LanguageOptions languageOptions)
     {
         ArgumentNullException.ThrowIfNull(services);
         ArgumentNullException.ThrowIfNull(sendMessageOptions);
+        ArgumentNullException.ThrowIfNull(languageOptions);
 
         if (sendMessageOptions.MaxMessageLength <= 0)
         {
@@ -22,8 +25,11 @@ public static class DependencyInjection
         }
 
         services.AddSingleton(sendMessageOptions);
+        services.AddSingleton(languageOptions);
         services.AddSingleton<IClock, SystemClock>();
         services.AddSingleton<SendMessageValidator>();
+        services.AddSingleton<LanguageInstructionBuilder>();
+        services.AddSingleton<ILanguagePolicy, RussianDefaultLanguagePolicy>();
         services.AddSingleton<PromptBuilder>();
         services.AddScoped<SendMessageHandler>();
 
