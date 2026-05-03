@@ -3,9 +3,12 @@ using Iris.Application.Abstractions.Models.Interfaces;
 using Iris.Application.Abstractions.Persistence;
 using Iris.Application.Chat.Contracts;
 using Iris.Application.Chat.Prompting;
+using Iris.Application.Memory.Context;
 using Iris.Domain.Conversations;
 using Iris.Shared.Results;
 using Iris.Shared.Time.Interfaces;
+
+using DomainMemory = Iris.Domain.Memories.Memory;
 
 namespace Iris.Application.Chat.SendMessage;
 
@@ -18,6 +21,7 @@ public sealed class SendMessageHandler
     private readonly IUnitOfWork _unitOfWork;
     private readonly IChatModelClient _chatModelClient;
     private readonly PromptBuilder _promptBuilder;
+    private readonly MemoryContextBuilder _memoryContextBuilder;
     private readonly SendMessageValidator _validator;
     private readonly IClock _clock;
 
@@ -27,6 +31,7 @@ public sealed class SendMessageHandler
         IUnitOfWork unitOfWork,
         IChatModelClient chatModelClient,
         PromptBuilder promptBuilder,
+        MemoryContextBuilder memoryContextBuilder,
         SendMessageValidator validator,
         IClock clock)
     {
@@ -35,6 +40,7 @@ public sealed class SendMessageHandler
         _unitOfWork = unitOfWork;
         _chatModelClient = chatModelClient;
         _promptBuilder = promptBuilder;
+        _memoryContextBuilder = memoryContextBuilder;
         _validator = validator;
         _clock = clock;
     }
@@ -92,7 +98,20 @@ public sealed class SendMessageHandler
             .OrderBy(message => message.CreatedAt)
             .ToList();
 
-        Result<PromptBuildResult> promptResult = _promptBuilder.Build(new PromptBuildRequest(chronologicalHistory, userContent));
+        var promptBuildRequest = new PromptBuildRequest(chronologicalHistory, userContent);
+
+        IReadOnlyList<DomainMemory> memories;
+
+        try
+        {
+            memories = await _memoryContextBuilder.SelectAsync(promptBuildRequest, cancellationToken);
+        }
+        catch
+        {
+            memories = Array.Empty<DomainMemory>();
+        }
+
+        Result<PromptBuildResult> promptResult = _promptBuilder.Build(promptBuildRequest, memories);
 
         if (promptResult.IsFailure)
         {

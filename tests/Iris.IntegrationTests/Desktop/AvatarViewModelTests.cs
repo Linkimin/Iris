@@ -6,11 +6,15 @@ using System.Threading.Tasks;
 
 using Iris.Application.Chat.Contracts;
 using Iris.Application.Chat.SendMessage;
+using Iris.Application.Memory.Commands;
+using Iris.Application.Memory.Contracts;
+using Iris.Application.Memory.Queries;
 using Iris.Desktop;
 using Iris.Desktop.Models;
 using Iris.Desktop.Services;
 using Iris.Desktop.ViewModels;
 using Iris.Domain.Conversations;
+using Iris.Domain.Memories;
 using Iris.IntegrationTests.Testing;
 using Iris.Shared.Results;
 
@@ -365,6 +369,41 @@ public sealed class AvatarViewModelTests
             CancellationToken cancellationToken)
         {
             return Task.FromResult(Result<SendMessageResult>.Failure(
+                Error.Failure("test.not_used", "minimal fake")));
+        }
+
+        public Task<Result<RememberMemoryResult>> RememberAsync(
+            string content,
+            MemoryKind? kind,
+            MemoryImportance? importance,
+            CancellationToken cancellationToken)
+        {
+            return Task.FromResult(Result<RememberMemoryResult>.Failure(
+                Error.Failure("test.not_used", "minimal fake")));
+        }
+
+        public Task<Result> ForgetAsync(
+            MemoryId id,
+            CancellationToken cancellationToken)
+        {
+            return Task.FromResult(Result.Failure(
+                Error.Failure("test.not_used", "minimal fake")));
+        }
+
+        public Task<Result<UpdateMemoryResult>> UpdateAsync(
+            MemoryId id,
+            string newContent,
+            CancellationToken cancellationToken)
+        {
+            return Task.FromResult(Result<UpdateMemoryResult>.Failure(
+                Error.Failure("test.not_used", "minimal fake")));
+        }
+
+        public Task<Result<IReadOnlyList<MemoryDto>>> ListActiveMemoriesAsync(
+            int? limit,
+            CancellationToken cancellationToken)
+        {
+            return Task.FromResult(Result<IReadOnlyList<MemoryDto>>.Failure(
                 Error.Failure("test.not_used", "minimal fake")));
         }
     }

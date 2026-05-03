@@ -1,10 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
+namespace Iris.Domain.Memories;
 
-namespace Iris.Domain.Memories
+public enum MemorySource
 {
-    internal class MemorySource
-    {
-    }
+    UserExplicit = 0,
 }

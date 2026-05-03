@@ -1,8 +1,14 @@
 using Iris.Application.Abstractions.Models.Contracts.Chat;
+using Iris.Application.Abstractions.Persistence;
 using Iris.Application.Chat.Prompting;
+using Iris.Application.Memory.Context;
+using Iris.Application.Memory.Options;
 using Iris.Application.Persona.Language;
 using Iris.Domain.Conversations;
+using Iris.Domain.Memories;
 using Iris.Shared.Results;
+
+using DomainMemory = Iris.Domain.Memories.Memory;
 
 namespace Iris.Application.Tests.Chat.Prompting;
 
@@ -10,10 +16,14 @@ public sealed class PromptBuilderTests
 {
     private const string _stubPrompt = "TEST_SYSTEM_PROMPT";
 
+    private static readonly MemoryOptions _memoryOptions = MemoryOptions.Default;
+    private static readonly MemoryPromptFormatter _memoryPromptFormatter = new();
+    private static readonly StubMemoryRepository _stubMemoryRepository = new();
+
     [Fact]
     public void Build_IncludesSystemMessageHistoryAndCurrentUserMessage()
     {
-        var builder = new PromptBuilder(new StubLanguagePolicy());
+        PromptBuilder builder = CreateBuilder();
         var conversationId = ConversationId.New();
         var createdAt = new DateTimeOffset(2026, 4, 26, 10, 0, 0, TimeSpan.Zero);
         Message[] history = new[]
@@ -66,7 +76,7 @@ public sealed class PromptBuilderTests
     [Fact]
     public void Build_UsesInjectedLanguagePolicy_ForSystemMessage()
     {
-        PromptBuilder builder = new(new StubLanguagePolicy());
+        PromptBuilder builder = CreateBuilder();
 
         Result<PromptBuildResult> result = builder.Build(new PromptBuildRequest(
             Array.Empty<Message>(),
@@ -80,9 +90,12 @@ public sealed class PromptBuilderTests
     [Fact]
     public void Build_WithDefaultRussianPolicy_DoesNotEmitLegacyEnglishBaseline()
     {
-        PromptBuilder builder = new(new RussianDefaultLanguagePolicy(
-            LanguageOptions.Default,
-            new LanguageInstructionBuilder()));
+        PromptBuilder builder = new(
+            new RussianDefaultLanguagePolicy(
+                LanguageOptions.Default,
+                new LanguageInstructionBuilder()),
+            new MemoryContextBuilder(_stubMemoryRepository, _memoryOptions),
+            _memoryPromptFormatter);
 
         Result<PromptBuildResult> result = builder.Build(new PromptBuildRequest(
             Array.Empty<Message>(),
@@ -94,8 +107,44 @@ public sealed class PromptBuilderTests
             result.Value.ModelRequest.Messages[0].Content);
     }
 
+    private static PromptBuilder CreateBuilder()
+    {
+        return new PromptBuilder(
+            new StubLanguagePolicy(),
+            new MemoryContextBuilder(_stubMemoryRepository, _memoryOptions),
+            _memoryPromptFormatter);
+    }
+
     private sealed class StubLanguagePolicy : ILanguagePolicy
     {
         public string GetSystemPrompt() => _stubPrompt;
+    }
+
+    private sealed class StubMemoryRepository : IMemoryRepository
+    {
+        public Task<DomainMemory?> GetByIdAsync(MemoryId id, CancellationToken ct)
+        {
+            return Task.FromResult<DomainMemory?>(null);
+        }
+
+        public Task AddAsync(DomainMemory memory, CancellationToken ct)
+        {
+            return Task.CompletedTask;
+        }
+
+        public Task UpdateAsync(DomainMemory memory, CancellationToken ct)
+        {
+            return Task.CompletedTask;
+        }
+
+        public Task<IReadOnlyList<DomainMemory>> ListActiveAsync(int limit, CancellationToken ct)
+        {
+            return Task.FromResult<IReadOnlyList<DomainMemory>>(Array.Empty<DomainMemory>());
+        }
+
+        public Task<IReadOnlyList<DomainMemory>> SearchActiveAsync(string query, int limit, CancellationToken ct)
+        {
+            return Task.FromResult<IReadOnlyList<DomainMemory>>(Array.Empty<DomainMemory>());
+        }
     }
 }

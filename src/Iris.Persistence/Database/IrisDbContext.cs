@@ -15,6 +15,8 @@ public sealed class IrisDbContext : DbContext
 
     public DbSet<MessageEntity> Messages => Set<MessageEntity>();
 
+    public DbSet<MemoryEntity> Memories => Set<MemoryEntity>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(IrisDbContext).Assembly);

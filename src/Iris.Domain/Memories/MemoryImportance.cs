@@ -1,10 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
+namespace Iris.Domain.Memories;
 
-namespace Iris.Domain.Memories
+public enum MemoryImportance
 {
-    internal class MemoryImportance
-    {
-    }
+    Low = 0,
+    Normal = 1,
+    High = 2,
 }

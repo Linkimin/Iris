@@ -1,26 +1,54 @@
 using Iris.Application.Abstractions.Models.Contracts.Chat;
+using Iris.Application.Memory.Context;
 using Iris.Application.Persona.Language;
 using Iris.Domain.Conversations;
 using Iris.Shared.Results;
+
+using DomainMemory = Iris.Domain.Memories.Memory;
 
 namespace Iris.Application.Chat.Prompting;
 
 public sealed class PromptBuilder
 {
     private readonly ILanguagePolicy _languagePolicy;
+    private readonly MemoryContextBuilder _memoryContextBuilder;
+    private readonly MemoryPromptFormatter _memoryPromptFormatter;
 
-    public PromptBuilder(ILanguagePolicy languagePolicy)
+    public PromptBuilder(
+        ILanguagePolicy languagePolicy,
+        MemoryContextBuilder memoryContextBuilder,
+        MemoryPromptFormatter memoryPromptFormatter)
     {
         ArgumentNullException.ThrowIfNull(languagePolicy);
+        ArgumentNullException.ThrowIfNull(memoryContextBuilder);
+        ArgumentNullException.ThrowIfNull(memoryPromptFormatter);
+
         _languagePolicy = languagePolicy;
+        _memoryContextBuilder = memoryContextBuilder;
+        _memoryPromptFormatter = memoryPromptFormatter;
     }
 
     public Result<PromptBuildResult> Build(PromptBuildRequest request)
+    {
+        return Build(request, Array.Empty<DomainMemory>());
+    }
+
+    public Result<PromptBuildResult> Build(PromptBuildRequest request, IReadOnlyList<DomainMemory> memories)
     {
         var messages = new List<ChatModelMessage>
         {
             new(ChatModelRole.System, _languagePolicy.GetSystemPrompt())
         };
+
+        if (memories.Count > 0)
+        {
+            var memoryBlock = _memoryPromptFormatter.Format(memories);
+
+            if (memoryBlock.Length > 0)
+            {
+                messages.Add(new ChatModelMessage(ChatModelRole.System, memoryBlock));
+            }
+        }
 
         messages.AddRange(request.RecentMessages.Select(MapHistoryMessage));
         messages.Add(new ChatModelMessage(ChatModelRole.User, request.CurrentUserMessage.Value));

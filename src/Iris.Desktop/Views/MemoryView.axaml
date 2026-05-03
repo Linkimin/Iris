@@ -1,5 +1,115 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             x:Class="Iris.Desktop.Views.MemoryView">
-  <Grid />
+             xmlns:vm="using:Iris.Desktop.ViewModels"
+             xmlns:models="using:Iris.Desktop.Models"
+             x:Class="Iris.Desktop.Views.MemoryView"
+             x:DataType="vm:MemoryViewModel">
+
+  <!--
+    Iris MemoryView — Premium UI v1 left rail (FR-001, FR-017).
+    Bindings preserved exactly from Phase 8 Memory v1; only visual restyle.
+    Plan: docs/plans/2026-05-03-premium-ui-overhaul-v1.plan.md (Phase 5)
+  -->
+  <Border Background="Transparent"
+          BorderBrush="{StaticResource Iris.Border}"
+          BorderThickness="0,0,1,0">
+    <Grid RowDefinitions="Auto,*,Auto"
+          Margin="10">
+
+      <!-- Input row -->
+      <StackPanel Grid.Row="0"
+                  Orientation="Vertical"
+                  Spacing="8"
+                  Margin="0,0,0,12">
+        <TextBox Text="{Binding NewMemoryContent}"
+                 PlaceholderText="Что запомнить?"
+                 Background="Transparent"
+                 BorderBrush="{StaticResource Iris.AccentPrimary}"
+                 BorderThickness="0,0,0,1"
+                 CornerRadius="0"
+                 Padding="4,6"
+                 Foreground="{StaticResource Iris.TextPrimary}"
+                 FontFamily="{StaticResource Iris.FontFamily.Ui}"
+                 FontSize="{StaticResource Iris.FontSize.Body}" />
+        <Button Content="Запомнить"
+                Command="{Binding RememberCommand}"
+                HorizontalAlignment="Stretch"
+                HorizontalContentAlignment="Center"
+                Background="{StaticResource Iris.AccentPrimary}"
+                Foreground="{StaticResource Iris.TextPrimary}"
+                FontFamily="{StaticResource Iris.FontFamily.Ui}"
+                FontSize="{StaticResource Iris.FontSize.Body}"
+                FontWeight="SemiBold" />
+      </StackPanel>
+
+      <!-- Memory list -->
+      <ScrollViewer Grid.Row="1"
+                    HorizontalScrollBarVisibility="Disabled"
+                    VerticalScrollBarVisibility="Auto">
+        <ItemsControl ItemsSource="{Binding Memories}">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate DataType="models:MemoryViewModelItem">
+              <Border BorderBrush="{StaticResource Iris.Border}"
+                      BorderThickness="0,0,0,1"
+                      Padding="6,8"
+                      Margin="0,0,0,4">
+                <Grid RowDefinitions="Auto,Auto,Auto,Auto">
+
+                  <TextBlock Grid.Row="0"
+                             Text="{Binding Content}"
+                             TextWrapping="Wrap"
+                             FontFamily="{StaticResource Iris.FontFamily.Ui}"
+                             FontSize="{StaticResource Iris.FontSize.Body}"
+                             Foreground="{StaticResource Iris.TextPrimary}" />
+
+                  <StackPanel Grid.Row="1"
+                              Orientation="Horizontal"
+                              Margin="0,4,0,0"
+                              Spacing="8">
+                    <TextBlock Text="{Binding KindLabel}"
+                               FontFamily="{StaticResource Iris.FontFamily.Ui}"
+                               FontSize="{StaticResource Iris.FontSize.Caption}"
+                               Foreground="{StaticResource Iris.TextMuted}" />
+                    <TextBlock Text="{Binding ImportanceLabel}"
+                               FontFamily="{StaticResource Iris.FontFamily.Ui}"
+                               FontSize="{StaticResource Iris.FontSize.Caption}"
+                               Foreground="{StaticResource Iris.TextMuted}" />
+                  </StackPanel>
+
+                  <TextBlock Grid.Row="2"
+                             Text="{Binding CreatedAt, StringFormat='{}{0:dd.MM.yyyy HH:mm}'}"
+                             FontFamily="{StaticResource Iris.FontFamily.Ui}"
+                             FontSize="{StaticResource Iris.FontSize.Caption}"
+                             Foreground="{StaticResource Iris.TextMuted}"
+                             Margin="0,2,0,0" />
+
+                  <Button Grid.Row="3"
+                          Content="Забыть"
+                          Command="{Binding $parent[ItemsControl].DataContext.ForgetCommand}"
+                          CommandParameter="{Binding Id}"
+                          HorizontalAlignment="Right"
+                          Margin="0,4,0,0"
+                          Background="Transparent"
+                          Foreground="{StaticResource Iris.TextMuted}"
+                          BorderThickness="0"
+                          FontFamily="{StaticResource Iris.FontFamily.Ui}"
+                          FontSize="{StaticResource Iris.FontSize.Caption}" />
+                </Grid>
+              </Border>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+      </ScrollViewer>
+
+      <!-- Status row -->
+      <StackPanel Grid.Row="2" Margin="0,8,0,0">
+        <TextBlock Text="{Binding ErrorMessage}"
+                   Foreground="{StaticResource Iris.Error}"
+                   FontFamily="{StaticResource Iris.FontFamily.Ui}"
+                   FontSize="{StaticResource Iris.FontSize.Caption}"
+                   TextWrapping="Wrap"
+                   IsVisible="{Binding ErrorMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+      </StackPanel>
+    </Grid>
+  </Border>
 </UserControl>

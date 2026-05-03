@@ -1,10 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
+using Iris.Domain.Memories;
 
-namespace Iris.Desktop.Models
-{
-    internal class MemoryViewModelItem
-    {
-    }
-}
+namespace Iris.Desktop.Models;
+
+public sealed record MemoryViewModelItem(
+    MemoryId Id,
+    string Content,
+    string KindLabel,
+    string ImportanceLabel,
+    DateTimeOffset CreatedAt,
+    DateTimeOffset? UpdatedAt);
