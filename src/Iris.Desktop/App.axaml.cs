@@ -1,6 +1,7 @@
 using System;
 using System.Threading;
 
+using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 
@@ -22,6 +23,14 @@ namespace Iris.Desktop
         public override void Initialize()
         {
             AvaloniaXamlLoader.Load(this);
+
+            // Load Iris "Deep Obsidian" v1 visual foundation them into application resources.
+            // Using runtime XAML load to avoid precompilation issues with MergedDictionaries
+            // inside Application.Resources in Avalonia 12.
+            // See: docs/plans/2026-05-03-premium-ui-overhaul-v1.plan.md Phase 1
+            var themeUri = new Uri("avares://Iris.Desktop/Themes/IrisTheme.axaml");
+            var themeResources = (Avalonia.Controls.ResourceDictionary)AvaloniaXamlLoader.Load(themeUri);
+            Resources.MergedDictionaries.Add(themeResources);
         }
 
         public override void OnFrameworkInitializationCompleted()

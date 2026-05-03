@@ -1,2 +1,46 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" />
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+  <!--
+    Iris "Deep Obsidian" v1 Visual Foundation.
+    Spec:   docs/specs/2026-05-03-premium-ui-overhaul-v1.spec.md
+    Design: docs/designs/2026-05-03-premium-ui-overhaul-v1.design.md
+    All hex literals in the Iris Desktop UI must originate from this file only.
+  -->
+
+  <!-- Color tokens (FR-002) -->
+  <Color x:Key="Iris.Background.Color">#FF0D0D12</Color>
+  <Color x:Key="Iris.Surface.Color">#B31E1E23</Color>
+  <Color x:Key="Iris.AccentPrimary.Color">#FF7C4DFF</Color>
+  <Color x:Key="Iris.AccentSecondary.Color">#FF00E5FF</Color>
+  <Color x:Key="Iris.TextPrimary.Color">#FFE0E0E0</Color>
+  <Color x:Key="Iris.TextMuted.Color">#FFB0BEC5</Color>
+  <Color x:Key="Iris.TextLog.Color">#66B0BEC5</Color>
+  <Color x:Key="Iris.Border.Color">#FF2A3140</Color>
+  <Color x:Key="Iris.Error.Color">#FFF08A8A</Color>
+
+  <!-- Brush tokens -->
+  <SolidColorBrush x:Key="Iris.Background" Color="{StaticResource Iris.Background.Color}" />
+  <SolidColorBrush x:Key="Iris.Surface" Color="{StaticResource Iris.Surface.Color}" />
+  <SolidColorBrush x:Key="Iris.AccentPrimary" Color="{StaticResource Iris.AccentPrimary.Color}" />
+  <SolidColorBrush x:Key="Iris.AccentSecondary" Color="{StaticResource Iris.AccentSecondary.Color}" />
+  <SolidColorBrush x:Key="Iris.TextPrimary" Color="{StaticResource Iris.TextPrimary.Color}" />
+  <SolidColorBrush x:Key="Iris.TextMuted" Color="{StaticResource Iris.TextMuted.Color}" />
+  <SolidColorBrush x:Key="Iris.TextLog" Color="{StaticResource Iris.TextLog.Color}" />
+  <SolidColorBrush x:Key="Iris.Border" Color="{StaticResource Iris.Border.Color}" />
+  <SolidColorBrush x:Key="Iris.Error" Color="{StaticResource Iris.Error.Color}" />
+
+  <!-- Typography (FR-003) -->
+  <!--
+    Iris.FontFamily.Ui resolves to Inter, packaged via Avalonia.Fonts.Inter.
+    Iris.FontFamily.Mono uses system fallback chain (no extra packages, A-002).
+  -->
+  <FontFamily x:Key="Iris.FontFamily.Ui">avares://Avalonia.Fonts.Inter/Assets#Inter</FontFamily>
+  <FontFamily x:Key="Iris.FontFamily.Mono">JetBrains Mono, Cascadia Mono, Consolas, monospace</FontFamily>
+
+  <x:Double x:Key="Iris.FontSize.Body">13</x:Double>
+  <x:Double x:Key="Iris.FontSize.Caption">10</x:Double>
+  <x:Double x:Key="Iris.FontSize.Mono">12</x:Double>
+  <x:Double x:Key="Iris.FontSize.Title">24</x:Double>
+
+</ResourceDictionary>

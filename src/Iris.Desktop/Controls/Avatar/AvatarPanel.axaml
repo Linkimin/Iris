@@ -19,6 +19,13 @@
     <models:AvatarState x:Key="ErrorState">Error</models:AvatarState>
   </UserControl.Resources>
 
+  <!--
+    Iris Avatar — Premium UI v1 ring indicator (FR-015).
+    Plan: docs/plans/2026-05-03-premium-ui-overhaul-v1.plan.md (Phase 6)
+    Ring visuals are driven entirely by XAML Style Selectors and Animations;
+    no C# timers introduced for the ring (existing AvatarViewModel timer for
+    Success state is preserved).
+  -->
   <Grid IsVisible="{Binding State, Converter={StaticResource NotHiddenConverter}}"
         Width="{Binding Size, Converter={StaticResource SizeConverter}}"
         Height="{Binding Size, Converter={StaticResource SizeConverter}}">
@@ -73,5 +80,54 @@
       <Ellipse Classes="fallbackCircle" />
       <TextBlock Classes="fallbackText" />
     </Panel>
+
+    <!-- Ring indicator (FR-015) -->
+    <Ellipse x:Name="StateRing"
+             StrokeThickness="2"
+             Fill="Transparent"
+             IsHitTestVisible="False"
+             Classes.idle="{Binding State,
+                 Converter={StaticResource StateEqualityConverter},
+                 ConverterParameter={StaticResource IdleState}}"
+             Classes.thinking="{Binding State,
+                 Converter={StaticResource StateEqualityConverter},
+                 ConverterParameter={StaticResource ThinkingState}}"
+             Classes.success="{Binding State,
+                 Converter={StaticResource StateEqualityConverter},
+                 ConverterParameter={StaticResource SuccessState}}"
+             Classes.error="{Binding State,
+                 Converter={StaticResource StateEqualityConverter},
+                 ConverterParameter={StaticResource ErrorState}}">
+      <Ellipse.Styles>
+        <Style Selector="Ellipse#StateRing.idle">
+          <Setter Property="Stroke" Value="{StaticResource Iris.AccentPrimary}" />
+          <Setter Property="Opacity" Value="0.3" />
+        </Style>
+        <Style Selector="Ellipse#StateRing.thinking">
+          <Setter Property="Stroke" Value="{StaticResource Iris.AccentPrimary}" />
+          <Setter Property="Opacity" Value="1.0" />
+          <Style.Animations>
+            <Animation Duration="0:0:1.5"
+                       IterationCount="INFINITE"
+                       PlaybackDirection="Alternate">
+              <KeyFrame Cue="0%">
+                <Setter Property="Opacity" Value="0.4" />
+              </KeyFrame>
+              <KeyFrame Cue="100%">
+                <Setter Property="Opacity" Value="1.0" />
+              </KeyFrame>
+            </Animation>
+          </Style.Animations>
+        </Style>
+        <Style Selector="Ellipse#StateRing.success">
+          <Setter Property="Stroke" Value="{StaticResource Iris.AccentSecondary}" />
+          <Setter Property="Opacity" Value="1.0" />
+        </Style>
+        <Style Selector="Ellipse#StateRing.error">
+          <Setter Property="Stroke" Value="{StaticResource Iris.Error}" />
+          <Setter Property="Opacity" Value="0.6" />
+        </Style>
+      </Ellipse.Styles>
+    </Ellipse>
   </Grid>
 </UserControl>

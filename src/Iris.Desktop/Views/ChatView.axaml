@@ -5,53 +5,51 @@
              xmlns:chat="using:Iris.Desktop.Controls"
              x:Class="Iris.Desktop.Views.ChatView"
              x:DataType="vm:ChatViewModel">
+  <!--
+    Iris ChatView — Premium UI v1 (FR-001, FR-012, FR-013, FR-014, FR-019).
+    All colors via {StaticResource Iris.*}; no hex literals.
+    Plan: docs/plans/2026-05-03-premium-ui-overhaul-v1.plan.md (Phase 3)
+  -->
   <Grid RowDefinitions="Auto,*,Auto"
-        RowSpacing="16"
+        RowSpacing="12"
         Margin="20"
-        Background="#101216">
-    <StackPanel Grid.Row="0"
-                Spacing="2">
-      <TextBlock Text="Iris"
-                 FontSize="24"
-                 FontWeight="SemiBold"
-                 Foreground="#F2F4F8" />
-      <TextBlock Text="Local chat"
-                 FontSize="13"
-                 Foreground="#AAB2C0" />
-    </StackPanel>
+        Background="Transparent">
 
-    <Border Grid.Row="1"
-            BorderBrush="#2A3140"
-            BorderThickness="1"
-            CornerRadius="8"
-            Padding="12"
-            Background="#151922">
-      <ScrollViewer VerticalScrollBarVisibility="Auto">
-        <ItemsControl ItemsSource="{Binding Messages}">
-          <ItemsControl.ItemTemplate>
-            <DataTemplate x:DataType="models:ChatMessageViewModelItem">
-              <chat:ChatMessageBubble Margin="0,0,0,10" />
-            </DataTemplate>
-          </ItemsControl.ItemTemplate>
-        </ItemsControl>
-      </ScrollViewer>
-    </Border>
+    <!-- Thought Log placeholder (FR-012) -->
+    <TextBlock Grid.Row="0"
+               Text="[core] thinking…"
+               FontFamily="{StaticResource Iris.FontFamily.Mono}"
+               FontSize="{StaticResource Iris.FontSize.Mono}"
+               Foreground="{StaticResource Iris.TextLog}"
+               IsVisible="{Binding IsSending}"
+               HorizontalAlignment="Left" />
 
+    <!-- Messages list -->
+    <ScrollViewer Grid.Row="1"
+                  VerticalScrollBarVisibility="Auto"
+                  HorizontalScrollBarVisibility="Disabled">
+      <ItemsControl ItemsSource="{Binding Messages}">
+        <ItemsControl.ItemTemplate>
+          <DataTemplate x:DataType="models:ChatMessageViewModelItem">
+            <chat:ChatMessageBubble Margin="0,0,0,10" />
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ItemsControl>
+    </ScrollViewer>
+
+    <!-- Status + input region -->
     <Grid Grid.Row="2"
-          RowDefinitions="Auto,Auto,Auto"
+          RowDefinitions="Auto,Auto"
           RowSpacing="8">
       <TextBlock Grid.Row="0"
                  Text="{Binding ErrorMessage}"
                  IsVisible="{Binding HasError}"
-                 Foreground="#F08A8A"
+                 Foreground="{StaticResource Iris.Error}"
+                 FontFamily="{StaticResource Iris.FontFamily.Ui}"
+                 FontSize="{StaticResource Iris.FontSize.Body}"
                  TextWrapping="Wrap" />
 
-      <TextBlock Grid.Row="1"
-                 Text="Thinking..."
-                 IsVisible="{Binding IsSending}"
-                 Foreground="#AAB2C0" />
-
-      <Grid Grid.Row="2"
+      <Grid Grid.Row="1"
             ColumnDefinitions="*,Auto"
             ColumnSpacing="8">
         <TextBox x:Name="InputTextBox"
@@ -62,7 +60,15 @@
                  MinHeight="48"
                  MaxHeight="160"
                  IsEnabled="{Binding CanEditInput}"
-                 PlaceholderText="Message Iris (Enter to send, Shift+Enter for new line)">
+                 PlaceholderText="Message Iris (Enter to send, Shift+Enter for new line)"
+                 Background="Transparent"
+                 BorderBrush="{StaticResource Iris.AccentPrimary}"
+                 BorderThickness="0,0,0,1"
+                 CornerRadius="0"
+                 Padding="4,8"
+                 Foreground="{StaticResource Iris.TextPrimary}"
+                 FontFamily="{StaticResource Iris.FontFamily.Ui}"
+                 FontSize="{StaticResource Iris.FontSize.Body}">
           <TextBox.KeyBindings>
             <KeyBinding Gesture="Enter"
                         Command="{Binding SendMessageCommand}" />
@@ -72,8 +78,10 @@
         <Button Grid.Column="1"
                 MinWidth="96"
                 VerticalAlignment="Stretch"
-                Background="#3B82F6"
-                Foreground="#F2F4F8"
+                Background="{StaticResource Iris.AccentPrimary}"
+                Foreground="{StaticResource Iris.TextPrimary}"
+                FontFamily="{StaticResource Iris.FontFamily.Ui}"
+                FontSize="{StaticResource Iris.FontSize.Body}"
                 FontWeight="SemiBold"
                 Command="{Binding SendMessageCommand}">
           Send
