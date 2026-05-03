@@ -2,6 +2,7 @@ using System;
 
 using Iris.Application;
 using Iris.Application.Chat.SendMessage;
+using Iris.Application.Memory.Options;
 using Iris.Application.Persona.Language;
 using Iris.Desktop.Hosting;
 using Iris.Desktop.Models;
@@ -57,7 +58,7 @@ internal static class DependencyInjection
             ? LanguageOptions.Default
             : new LanguageOptions(configuredLanguage);
 
-        services.AddIrisApplication(new SendMessageOptions(maxMessageLength), languageOptions);
+        services.AddIrisApplication(new SendMessageOptions(maxMessageLength), languageOptions, MemoryOptions.Default);
         services.AddIrisPersistence(options => options.ConnectionString = resolvedDatabaseConnectionString);
         services.AddIrisModelGateway(options =>
         {
@@ -75,6 +76,7 @@ internal static class DependencyInjection
         // Single-window app → Singleton is the simplest correct lifetime.
         services.AddSingleton<ChatViewModel>();
         services.AddSingleton<MainWindowViewModel>();
+        services.AddSingleton<MemoryViewModel>();
 
         var avatarEnabled = configuration.GetValue<bool?>("Desktop:Avatar:Enabled") ?? true;
         var avatarSizeString = configuration.GetValue<string>("Desktop:Avatar:Size");

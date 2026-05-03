@@ -1,10 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
+namespace Iris.Domain.Memories;
 
-namespace Iris.Domain.Memories
+public enum MemoryStatus
 {
-    internal class MemoryStatus
-    {
-    }
+    Active = 0,
+    Forgotten = 1,
 }

@@ -2,11 +2,15 @@ using Iris.Application.Abstractions.Models.Contracts.Chat;
 using Iris.Application.Abstractions.Models.Interfaces;
 using Iris.Application.Abstractions.Persistence;
 using Iris.Application.Chat.SendMessage;
+using Iris.Application.Memory.Options;
 using Iris.Application.Persona.Language;
 using Iris.Domain.Conversations;
+using Iris.Domain.Memories;
 using Iris.Shared.Results;
 
 using Microsoft.Extensions.DependencyInjection;
+
+using DomainMemory = Iris.Domain.Memories.Memory;
 
 namespace Iris.Application.Tests;
 
@@ -21,7 +25,8 @@ public sealed class DependencyInjectionTests
         services.AddSingleton<IMessageRepository, FakeMessageRepository>();
         services.AddSingleton<IUnitOfWork, FakeUnitOfWork>();
         services.AddSingleton<IChatModelClient, FakeChatModelClient>();
-        services.AddIrisApplication(new SendMessageOptions(8000), LanguageOptions.Default);
+        services.AddSingleton<IMemoryRepository, FakeMemoryRepository>();
+        services.AddIrisApplication(new SendMessageOptions(8000), LanguageOptions.Default, MemoryOptions.Default);
 
         using ServiceProvider provider = services.BuildServiceProvider();
 
@@ -33,7 +38,8 @@ public sealed class DependencyInjectionTests
     {
         var services = new ServiceCollection();
 
-        Assert.Throws<ArgumentNullException>(() => services.AddIrisApplication(null!, LanguageOptions.Default));
+        Assert.Throws<ArgumentNullException>(() =>
+            services.AddIrisApplication(null!, LanguageOptions.Default, MemoryOptions.Default));
     }
 
     [Theory]
@@ -44,7 +50,7 @@ public sealed class DependencyInjectionTests
         var services = new ServiceCollection();
 
         InvalidOperationException exception = Assert.Throws<InvalidOperationException>(
-            () => services.AddIrisApplication(new SendMessageOptions(maxMessageLength), LanguageOptions.Default));
+            () => services.AddIrisApplication(new SendMessageOptions(maxMessageLength), LanguageOptions.Default, MemoryOptions.Default));
 
         Assert.Equal("Chat max message length must be greater than zero.", exception.Message);
     }
@@ -54,7 +60,8 @@ public sealed class DependencyInjectionTests
     {
         var services = new ServiceCollection();
 
-        Assert.Throws<ArgumentNullException>(() => services.AddIrisApplication(new SendMessageOptions(8000), null!));
+        Assert.Throws<ArgumentNullException>(() =>
+            services.AddIrisApplication(new SendMessageOptions(8000), null!, MemoryOptions.Default));
     }
 
     [Fact]
@@ -66,7 +73,8 @@ public sealed class DependencyInjectionTests
         services.AddSingleton<IMessageRepository, FakeMessageRepository>();
         services.AddSingleton<IUnitOfWork, FakeUnitOfWork>();
         services.AddSingleton<IChatModelClient, FakeChatModelClient>();
-        services.AddIrisApplication(new SendMessageOptions(8000), LanguageOptions.Default);
+        services.AddSingleton<IMemoryRepository, FakeMemoryRepository>();
+        services.AddIrisApplication(new SendMessageOptions(8000), LanguageOptions.Default, MemoryOptions.Default);
 
         using ServiceProvider provider = services.BuildServiceProvider();
 
@@ -124,6 +132,34 @@ public sealed class DependencyInjectionTests
             CancellationToken cancellationToken)
         {
             return Task.FromResult(Result<ChatModelResponse>.Success(new ChatModelResponse("Assistant reply")));
+        }
+    }
+
+    private sealed class FakeMemoryRepository : IMemoryRepository
+    {
+        public Task<DomainMemory?> GetByIdAsync(MemoryId id, CancellationToken ct)
+        {
+            return Task.FromResult<DomainMemory?>(null);
+        }
+
+        public Task AddAsync(DomainMemory memory, CancellationToken ct)
+        {
+            return Task.CompletedTask;
+        }
+
+        public Task UpdateAsync(DomainMemory memory, CancellationToken ct)
+        {
+            return Task.CompletedTask;
+        }
+
+        public Task<IReadOnlyList<DomainMemory>> ListActiveAsync(int limit, CancellationToken ct)
+        {
+            return Task.FromResult<IReadOnlyList<DomainMemory>>(Array.Empty<DomainMemory>());
+        }
+
+        public Task<IReadOnlyList<DomainMemory>> SearchActiveAsync(string query, int limit, CancellationToken ct)
+        {
+            return Task.FromResult<IReadOnlyList<DomainMemory>>(Array.Empty<DomainMemory>());
         }
     }
 }

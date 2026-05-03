@@ -3,28 +3,46 @@
         xmlns:vm="using:Iris.Desktop.ViewModels"
         xmlns:views="using:Iris.Desktop.Views"
         xmlns:controls="using:Iris.Desktop.Controls.Avatar"
-        xmlns:converters="using:Iris.Desktop.Converters"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        d:DesignWidth="1000"
-        d:DesignHeight="700"
+        d:DesignWidth="1200"
+        d:DesignHeight="800"
         x:Class="Iris.Desktop.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
-        Title="Iris">
+        Title="Iris"
+        Width="1200"
+        Height="800"
+        MinWidth="900"
+        MinHeight="600"
+        Background="{StaticResource Iris.Background}"
+        TransparencyLevelHint="Mica,AcrylicBlur,Transparent,None"
+        ExtendClientAreaToDecorationsHint="True"
+        ExtendClientAreaTitleBarHeightHint="-1">
 
-  <Window.Resources>
-    <converters:AvatarPositionToAlignmentConverter x:Key="PositionToHorizontalAlignment" />
-    <converters:AvatarPositionToAlignmentConverter x:Key="PositionToVerticalAlignment" />
-  </Window.Resources>
+  <!--
+    Premium UI v1 layout (FR-004..FR-008, FR-016).
+    Fixed 200px Memory rail on the left; Chat fills the right; Avatar overlays
+    in the right-bottom corner with hit-test disabled.
+    Plan: docs/plans/2026-05-03-premium-ui-overhaul-v1.plan.md (Phase 2)
+  -->
+  <Grid Background="Transparent">
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="200" />
+      <ColumnDefinition Width="*" />
+    </Grid.ColumnDefinitions>
 
-  <Grid>
-    <views:ChatView DataContext="{Binding Chat}" />
-    <controls:AvatarPanel DataContext="{Binding Avatar}"
-                          HorizontalAlignment="{Binding Position, Converter={StaticResource PositionToHorizontalAlignment}, ConverterParameter=Horizontal}"
-                          VerticalAlignment="{Binding Position, Converter={StaticResource PositionToVerticalAlignment}, ConverterParameter=Vertical}"
-                          Margin="16"
-                          IsHitTestVisible="False" />
+    <views:MemoryView Grid.Column="0"
+                      DataContext="{Binding Memory}" />
+
+    <Grid Grid.Column="1">
+      <views:ChatView DataContext="{Binding Chat}" />
+      <controls:AvatarPanel DataContext="{Binding Avatar}"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Bottom"
+                            Margin="16,16,24,24"
+                            IsHitTestVisible="False" />
+    </Grid>
   </Grid>
 </Window>

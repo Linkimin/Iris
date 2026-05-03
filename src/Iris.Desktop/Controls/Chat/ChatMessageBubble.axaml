@@ -3,20 +3,38 @@
              xmlns:models="using:Iris.Desktop.Models"
              x:Class="Iris.Desktop.Controls.ChatMessageBubble"
              x:DataType="models:ChatMessageViewModelItem">
-  <Border Padding="12"
-          CornerRadius="8"
-          BorderThickness="1"
-          BorderBrush="#2A3140"
-          Background="#1B2130"
-          MaxWidth="760"
-          HorizontalAlignment="Stretch">
-    <StackPanel Spacing="4">
-      <TextBlock Text="{Binding Author}"
-                 FontWeight="SemiBold"
-                 Foreground="#F2F4F8" />
+  <!--
+    Iris Chat message bubble — Premium UI v1 (FR-009, FR-010, FR-011).
+    Visual selection by IsUser / IsAssistant; no code-behind logic.
+    Plan: docs/plans/2026-05-03-premium-ui-overhaul-v1.plan.md (Phase 4)
+  -->
+  <Grid>
+    <!-- User message: translucent surface, right-aligned, rounded. -->
+    <Border IsVisible="{Binding IsUser}"
+            Background="{StaticResource Iris.Surface}"
+            CornerRadius="8"
+            Padding="12"
+            HorizontalAlignment="Right"
+            MaxWidth="600">
       <TextBlock Text="{Binding Content}"
                  TextWrapping="Wrap"
-                 Foreground="#D9DEE8" />
-    </StackPanel>
-  </Border>
+                 FontFamily="{StaticResource Iris.FontFamily.Ui}"
+                 FontSize="{StaticResource Iris.FontSize.Body}"
+                 Foreground="{StaticResource Iris.TextPrimary}" />
+    </Border>
+
+    <!-- Iris (assistant) message: bare text with left accent line. -->
+    <Border IsVisible="{Binding IsAssistant}"
+            Background="Transparent"
+            BorderBrush="{StaticResource Iris.AccentPrimary}"
+            BorderThickness="2,0,0,0"
+            Padding="12,4,12,4"
+            HorizontalAlignment="Stretch">
+      <TextBlock Text="{Binding Content}"
+                 TextWrapping="Wrap"
+                 FontFamily="{StaticResource Iris.FontFamily.Ui}"
+                 FontSize="{StaticResource Iris.FontSize.Body}"
+                 Foreground="{StaticResource Iris.TextPrimary}" />
+    </Border>
+  </Grid>
 </UserControl>

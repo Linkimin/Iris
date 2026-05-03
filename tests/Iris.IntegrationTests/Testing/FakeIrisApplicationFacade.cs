@@ -5,8 +5,12 @@ using System.Threading.Tasks;
 
 using Iris.Application.Chat.Contracts;
 using Iris.Application.Chat.SendMessage;
+using Iris.Application.Memory.Commands;
+using Iris.Application.Memory.Contracts;
+using Iris.Application.Memory.Queries;
 using Iris.Desktop.Services;
 using Iris.Domain.Conversations;
+using Iris.Domain.Memories;
 using Iris.Shared.Results;
 
 namespace Iris.IntegrationTests.Testing;
@@ -14,10 +18,18 @@ namespace Iris.IntegrationTests.Testing;
 internal sealed class FakeIrisApplicationFacade : IIrisApplicationFacade
 {
     private readonly Queue<Result<SendMessageResult>> _results = new();
+    private readonly Queue<Result<IReadOnlyList<MemoryDto>>> _listMemoryResults = new();
 
     public TaskCompletionSource<Result<SendMessageResult>>? PendingResult { get; set; }
 
     public List<SendCall> Calls { get; } = new();
+
+    public List<MemoryId> ForgetCalls { get; } = new();
+
+    public void EnqueueListMemoriesSuccess(params MemoryDto[] memories)
+    {
+        _listMemoryResults.Enqueue(Result<IReadOnlyList<MemoryDto>>.Success(memories));
+    }
 
     public void EnqueueSuccess(
         ConversationId conversationId,
@@ -42,6 +54,63 @@ internal sealed class FakeIrisApplicationFacade : IIrisApplicationFacade
         return PendingResult is not null
             ? PendingResult.Task
             : Task.FromResult(_results.Dequeue());
+    }
+
+    public Task<Result<RememberMemoryResult>> RememberAsync(
+        string content,
+        MemoryKind? kind,
+        MemoryImportance? importance,
+        CancellationToken cancellationToken)
+    {
+        return Task.FromResult(
+            Result<RememberMemoryResult>.Success(
+                new RememberMemoryResult(
+                    new MemoryDto(
+                        MemoryId.New(),
+                        content,
+                        kind ?? MemoryKind.Note,
+                        importance ?? MemoryImportance.Normal,
+                        MemoryStatus.Active,
+                        DateTimeOffset.UtcNow,
+                        null))));
+    }
+
+    public Task<Result> ForgetAsync(
+        MemoryId id,
+        CancellationToken cancellationToken)
+    {
+        ForgetCalls.Add(id);
+        return Task.FromResult(Result.Success());
+    }
+
+    public Task<Result<UpdateMemoryResult>> UpdateAsync(
+        MemoryId id,
+        string newContent,
+        CancellationToken cancellationToken)
+    {
+        return Task.FromResult(
+            Result<UpdateMemoryResult>.Success(
+                new UpdateMemoryResult(
+                    new MemoryDto(
+                        id,
+                        newContent,
+                        MemoryKind.Note,
+                        MemoryImportance.Normal,
+                        MemoryStatus.Active,
+                        DateTimeOffset.UtcNow,
+                        DateTimeOffset.UtcNow))));
+    }
+
+    public Task<Result<IReadOnlyList<MemoryDto>>> ListActiveMemoriesAsync(
+        int? limit,
+        CancellationToken cancellationToken)
+    {
+        if (_listMemoryResults.Count > 0)
+        {
+            return Task.FromResult(_listMemoryResults.Dequeue());
+        }
+
+        return Task.FromResult(Result<IReadOnlyList<MemoryDto>>.Success(Array.Empty<MemoryDto>()));
     }
 
     public async Task WaitForCallsAsync(int expectedCalls)

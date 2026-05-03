@@ -3,10 +3,15 @@ using Iris.Application.Abstractions.Models.Interfaces;
 using Iris.Application.Abstractions.Persistence;
 using Iris.Application.Chat.Prompting;
 using Iris.Application.Chat.SendMessage;
+using Iris.Application.Memory.Context;
+using Iris.Application.Memory.Options;
 using Iris.Application.Persona.Language;
 using Iris.Domain.Conversations;
+using Iris.Domain.Memories;
 using Iris.Shared.Results;
 using Iris.Shared.Time.Interfaces;
+
+using DomainMemory = Iris.Domain.Memories.Memory;
 
 namespace Iris.Application.Tests.Chat.SendMessage;
 
@@ -313,12 +318,18 @@ public sealed class SendMessageHandlerTests
         FakeChatModelClient model,
         FakeClock clock)
     {
+        MemoryOptions memoryOptions = MemoryOptions.Default;
+        var memoryPromptFormatter = new MemoryPromptFormatter();
+        var memoryRepository = new FakeMemoryRepository();
+        var languagePolicy = new RussianDefaultLanguagePolicy(LanguageOptions.Default, new LanguageInstructionBuilder());
+
         return new SendMessageHandler(
             conversations,
             messages,
             unitOfWork,
             model,
-            new PromptBuilder(new RussianDefaultLanguagePolicy(LanguageOptions.Default, new LanguageInstructionBuilder())),
+            new PromptBuilder(languagePolicy, new MemoryContextBuilder(memoryRepository, memoryOptions), memoryPromptFormatter),
+            new MemoryContextBuilder(memoryRepository, memoryOptions),
             new SendMessageValidator(new SendMessageOptions(MaxMessageLength: 10_000)),
             clock);
     }
@@ -485,6 +496,34 @@ public sealed class SendMessageHandlerTests
             SendCalls++;
             LastRequest = request;
             return Task.FromResult(_response);
+        }
+    }
+
+    private sealed class FakeMemoryRepository : IMemoryRepository
+    {
+        public Task<DomainMemory?> GetByIdAsync(MemoryId id, CancellationToken ct)
+        {
+            return Task.FromResult<DomainMemory?>(null);
+        }
+
+        public Task AddAsync(DomainMemory memory, CancellationToken ct)
+        {
+            return Task.CompletedTask;
+        }
+
+        public Task UpdateAsync(DomainMemory memory, CancellationToken ct)
+        {
+            return Task.CompletedTask;
+        }
+
+        public Task<IReadOnlyList<DomainMemory>> ListActiveAsync(int limit, CancellationToken ct)
+        {
+            return Task.FromResult<IReadOnlyList<DomainMemory>>(Array.Empty<DomainMemory>());
+        }
+
+        public Task<IReadOnlyList<DomainMemory>> SearchActiveAsync(string query, int limit, CancellationToken ct)
+        {
+            return Task.FromResult<IReadOnlyList<DomainMemory>>(Array.Empty<DomainMemory>());
         }
     }
 }
